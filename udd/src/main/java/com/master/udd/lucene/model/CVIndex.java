@@ -1,4 +1,4 @@
-package com.master.udd.model.es;
+package com.master.udd.lucene.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,29 +17,29 @@ import javax.persistence.Id;
 @Getter
 @Setter
 
-//@Document(indexName = "cvs")
-public class CvES {
+@Document(indexName = "cvs")
+public class CVIndex {
 
-//    @Id
-//    @Field(type = FieldType.Text, index = false, store = true)
+    @Id
+    @Field(type = FieldType.Text, index = false, store = true)
     private String id;
 
-//    @Field(type = FieldType.Text, searchAnalyzer = "serbian", analyzer = "serbian")
+    @Field(type = FieldType.Text, searchAnalyzer = "serbian", analyzer = "serbian")
     private String applicantName;
 
-//    @Field(type = FieldType.Text, searchAnalyzer = "serbian", analyzer = "serbian")
+    @Field(type = FieldType.Text, searchAnalyzer = "serbian", analyzer = "serbian")
     private String applicantSurname;
 
-//    @Field(type = FieldType.Integer)
+    @Field(type = FieldType.Integer)
     private Integer applicantEducation;
 
-//    @GeoPointField
+    @GeoPointField
     private GeoPoint applicantLocation;
 
-//    @Field(type = FieldType.Text, searchAnalyzer = "serbian", analyzer = "serbian")
+    @Field(type = FieldType.Text, searchAnalyzer = "serbian", analyzer = "serbian")
     private String cvContent;
 
-    public CvES(String applicantName, String applicantSurname, Integer applicantEducation, String content) {
+    public CVIndex(String applicantName, String applicantSurname, Integer applicantEducation, String content) {
         this.applicantName = applicantName;
         this.applicantSurname = applicantSurname;
         this.applicantEducation = applicantEducation;

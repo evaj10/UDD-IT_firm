@@ -16,17 +16,17 @@ import java.util.Date;
 @Getter
 @Setter
 
-@Document(indexName = "application_infos")
+//@Document(indexName = "application_infos")
 public class ApplicationInfoES {
 
-    @Id
-    @Field(type = FieldType.Text, index = false, store = true)
+//    @Id
+//    @Field(type = FieldType.Text, index = false, store = true)
     private String id;
 
-    @GeoPointField
+//    @GeoPointField
     private GeoPoint location;
 
-    @Field(type = FieldType.Date)
+//    @Field(type = FieldType.Date)
     private Date timestamp;
 
     public ApplicationInfoES() {

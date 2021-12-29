@@ -17,8 +17,8 @@ import java.nio.file.Paths;
 @Service
 public class ApplicantService {
 
-    @Autowired
-    private CvESRepository cvESRepository;
+//    @Autowired
+//    private CvESRepository cvESRepository;
 
     @Autowired
     private FileStorageService fileStorageService;
@@ -31,14 +31,14 @@ public class ApplicantService {
 
     @Autowired
     private ApplicantRepository applicantRepository;
-
-    public CvES save(CvES applicant) {
-        return cvESRepository.save(applicant);
-    }
-
-    public CvES findById(String id) {
-        return cvESRepository.findById(id).orElse(null);
-    }
+//
+//    public CvES save(CvES applicant) {
+//        return cvESRepository.save(applicant);
+//    }
+//
+//    public CvES findById(String id) {
+//        return cvESRepository.findById(id).orElse(null);
+//    }
 
     public Applicant save(ApplicantDto applicantDto) throws IOException, EntityNotFoundException {
         String cvFileLocation = fileStorageService.saveFile(applicantDto.getCv());
@@ -51,6 +51,7 @@ public class ApplicantService {
         Applicant applicant = new Applicant(
                 applicantDto.getName(), applicantDto.getSurname(), applicantDto.getEmail(),
                 location, education, cv, letter);
+        // cuvanje u relacionu bazu
         return applicantRepository.save(applicant);
     }
 
