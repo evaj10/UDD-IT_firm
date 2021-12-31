@@ -5,6 +5,7 @@ import com.master.udd.dto.SearchRequestField;
 import com.master.udd.lucene.model.CVIndex;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
 import org.springframework.data.elasticsearch.core.SearchHit;
@@ -31,6 +32,7 @@ public class SearchService {
         // DA LI ONDA STAVITI DA SU IME I PREZIME TEXT POLJA?
         // (da bismo mogli da nadjemo i kada ne unesemo precizno)
         // (da li ako je term radi ć i c varijanta? -> verovatno ne)
+        // https://codecurated.com/blog/elasticsearch-text-vs-keyword/
         BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();
         for (SearchRequestField searchField : searchRequest.getFields()) {
             if (searchField.isMustContain()) {
@@ -49,12 +51,23 @@ public class SearchService {
                 }
             }
         }
+        // hajlajtovanje (dinamicki sazetak) ima smisla da se radi samo za sadrzaj
+        // (nema mi bas smisla da se radi sazetak za ime koja je jedna rec...)
+
+        // problem sa unified (defaultni highlighter) u kombinaciji sa phrase
+        // https://github.com/elastic/elasticsearch/issues/29561
+        // koristi se zbog toga plain
+        HighlightBuilder highlightBuilder = new HighlightBuilder()
+                                                .highlighterType("plain")
+                                                .field("cvContent");
         NativeSearchQuery searchQuery = new NativeSearchQueryBuilder()
                 .withQuery(queryBuilder)
+                .withHighlightBuilder(highlightBuilder)
                 .build();
 
         SearchHits<CVIndex> searchHits = elasticsearchRestTemplate.search(searchQuery, CVIndex.class, IndexCoordinates.of("cvs"));
 
+        // TODO obrada highlight-a
         List<CVIndex> found = new ArrayList<>();
         for (SearchHit<CVIndex> hit: searchHits.getSearchHits()) {
             CVIndex cvIndex = hit.getContent();
