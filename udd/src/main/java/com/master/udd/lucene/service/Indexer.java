@@ -5,9 +5,9 @@ import com.master.udd.lucene.model.CVIndex;
 import com.master.udd.lucene.repository.CVIndexRepository;
 import com.master.udd.model.Applicant;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.io.File;
 
 @Service
@@ -19,15 +19,14 @@ public class Indexer {
     @Autowired
     private PDFHandler fileHandler;
 
-    @Transactional
-    public String add(Applicant applicant) {
+    @Async
+    public void add(Applicant applicant) {
         String filename = applicant.getCv().getFileLocation();
         String cvContent = fileHandler.getText(new File(filename));
         CVIndex cvIndex = new CVIndex(applicant.getName(), applicant.getSurname(),
                 applicant.getEducationLevel().getLevel(), cvContent);
 
         cvRepository.save(cvIndex);
-        return cvIndex.getId();
     }
 
 }

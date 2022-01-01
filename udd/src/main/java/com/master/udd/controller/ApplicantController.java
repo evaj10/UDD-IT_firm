@@ -36,14 +36,14 @@ public class ApplicantController {
 //    }
 
     @PostMapping
-    public ResponseEntity<String> storeApplicant(@Valid @ModelAttribute ApplicantDto applicantDto)
+    public ResponseEntity<Void> storeApplicant(@Valid @ModelAttribute ApplicantDto applicantDto)
             throws IOException, EntityNotFoundException {
         Applicant applicant = applicantService.save(applicantDto);
-        String cvIndexId = indexer.add(applicant);
+        indexer.add(applicant);
 //        CvES applicantES =
 //                applicantService.save(new CvES("Eva", "Janković", 6, "Sadržaj CV-a je jako kratak."));
 //        ApplicationInfoES access = new ApplicationInfoES();
 //        applicationInfoESRepository.save(access);
-        return new ResponseEntity<>(cvIndexId, HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
