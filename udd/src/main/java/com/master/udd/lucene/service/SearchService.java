@@ -6,6 +6,7 @@ import com.master.udd.dto.SearchResponse;
 import com.master.udd.lucene.model.CVIndex;
 import lombok.AllArgsConstructor;
 import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.MultiMatchQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.springframework.data.domain.Pageable;
@@ -17,6 +18,8 @@ import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.stereotype.Service;
 
+import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +28,24 @@ import java.util.List;
 public class SearchService {
 
     private final ElasticsearchRestTemplate elasticsearchRestTemplate;
+
+    public List<SearchResponse> basicSearch(String query, Pageable pageable) {
+        HighlightBuilder highlightBuilder = new HighlightBuilder()
+                .highlighterType("plain")
+                .field("cvContent");
+        NativeSearchQuery searchQuery = new NativeSearchQueryBuilder()
+                .withQuery(multiMatchQuery(query)
+                        .field("applicantName")
+                        .field("applicantSurname")
+                        .field("cvContent")
+                        .type(MultiMatchQueryBuilder.Type.BEST_FIELDS))
+                .withHighlightBuilder(highlightBuilder)
+                .build();
+        SearchHits<CVIndex> searchHits =
+                elasticsearchRestTemplate.search(searchQuery, CVIndex.class, IndexCoordinates.of("cvs"));
+
+        return toSearchResponse(searchHits);
+    }
 
     public List<SearchResponse> search(SearchRequest searchRequest, Pageable pageable) {
         // za text polja ne koristiti termQuery nego matchQuery
@@ -73,7 +94,10 @@ public class SearchService {
         SearchHits<CVIndex> searchHits =
                 elasticsearchRestTemplate.search(searchQuery, CVIndex.class, IndexCoordinates.of("cvs"));
 
-        // TODO obrada highlight-a
+        return toSearchResponse(searchHits);
+    }
+
+    List<SearchResponse> toSearchResponse(SearchHits<CVIndex> searchHits) {
         List<SearchResponse> found = new ArrayList<>();
         String highlight;
         for (SearchHit<CVIndex> hit: searchHits.getSearchHits()) {
@@ -90,7 +114,7 @@ public class SearchService {
                     cvIndex.getApplicantLocation().getLon(),
                     cvIndex.getApplicantLocation().getLat(),
                     highlight
-                    );
+            );
             found.add(searchResponse);
         }
         return found;
