@@ -3,10 +3,10 @@ package com.master.udd.lucene.service;
 import com.master.udd.dto.SearchRequest;
 import com.master.udd.dto.SearchRequestField;
 import com.master.udd.lucene.model.CVIndex;
+import lombok.AllArgsConstructor;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
 import org.springframework.data.elasticsearch.core.SearchHit;
 import org.springframework.data.elasticsearch.core.SearchHits;
@@ -19,10 +19,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class SearchService {
 
-    @Autowired
-    private ElasticsearchRestTemplate elasticsearchRestTemplate;
+    private final ElasticsearchRestTemplate elasticsearchRestTemplate;
 
     public List<CVIndex> search(SearchRequest searchRequest) {
         // za text polja ne koristiti termQuery nego matchQuery

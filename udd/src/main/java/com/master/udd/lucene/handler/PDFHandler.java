@@ -14,7 +14,6 @@ public class PDFHandler {
     public String getText(File file) {
         try {
             PDFParser parser = new PDFParser(new RandomAccessFile(file, "r"));
-            // metadata extraction - ne trebaju nam i nemamo metapodatke u okviru pdf-a
             parser.parse();
             PDFTextStripper textStripper = new PDFTextStripper();
             return textStripper.getText(parser.getPDDocument());

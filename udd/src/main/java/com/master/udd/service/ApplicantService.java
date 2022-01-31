@@ -2,57 +2,40 @@ package com.master.udd.service;
 
 import com.master.udd.dto.ApplicantDto;
 import com.master.udd.exception.EntityNotFoundException;
+import com.master.udd.exception.InvalidAddressException;
+import com.master.udd.lucene.service.Indexer;
 import com.master.udd.model.*;
-import com.master.udd.model.es.CvES;
 import com.master.udd.repository.ApplicantRepository;
-import com.master.udd.repository.es.CvESRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 @Service
+@AllArgsConstructor
 public class ApplicantService {
 
-//    @Autowired
-//    private CvESRepository cvESRepository;
+    private final FileStorageService fileStorageService;
+    private final LocationService locationService;
+    private final EducationLevelService educationService;
+    private final ApplicantRepository applicantRepository;
+    private final Indexer indexer;
 
-    @Autowired
-    private FileStorageService fileStorageService;
-
-    @Autowired
-    private LocationService locationService;
-
-    @Autowired
-    private EducationLevelService educationService;
-
-    @Autowired
-    private ApplicantRepository applicantRepository;
-//
-//    public CvES save(CvES applicant) {
-//        return cvESRepository.save(applicant);
-//    }
-//
-//    public CvES findById(String id) {
-//        return cvESRepository.findById(id).orElse(null);
-//    }
-
-    public Applicant save(ApplicantDto applicantDto) throws IOException, EntityNotFoundException {
+    public Applicant save(ApplicantDto applicantDto) throws IOException, EntityNotFoundException, InvalidAddressException {
         String cvFileLocation = fileStorageService.saveFile(applicantDto.getCv());
         CV cv = new CV(cvFileLocation);
         String letterFileLocation = fileStorageService.saveFile(applicantDto.getLetter());
         Letter letter = new Letter(letterFileLocation);
         EducationLevel education = educationService.findById(applicantDto.getEducationLevelId());
-        // GEOCODING SERVICE ZA DOBAVLJANJE LOKACIJE
-        Location location = new Location(applicantDto.getAddress(), 39.56553881520639, 2.650095237636433);
+        Location location = locationService.getLocationFromAddress(applicantDto.getAddress());
         Applicant applicant = new Applicant(
                 applicantDto.getName(), applicantDto.getSurname(), applicantDto.getEmail(),
                 location, education, cv, letter);
         // cuvanje u relacionu bazu
-        return applicantRepository.save(applicant);
+        applicant = applicantRepository.save(applicant);
+        // cuvanje u ES ineksnu strukturu
+        indexer.add(applicant);
+        return applicant;
     }
 
 }

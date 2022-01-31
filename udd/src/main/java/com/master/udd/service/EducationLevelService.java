@@ -3,14 +3,14 @@ package com.master.udd.service;
 import com.master.udd.exception.EntityNotFoundException;
 import com.master.udd.model.EducationLevel;
 import com.master.udd.repository.EducationLevelRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@AllArgsConstructor
 public class EducationLevelService {
 
-    @Autowired
-    private EducationLevelRepository educationLevelRepository;
+    private final EducationLevelRepository educationLevelRepository;
 
     private final String entityName = "Education level";
 

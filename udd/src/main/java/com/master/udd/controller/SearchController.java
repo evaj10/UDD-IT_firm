@@ -3,6 +3,7 @@ package com.master.udd.controller;
 import com.master.udd.dto.SearchRequest;
 import com.master.udd.lucene.model.CVIndex;
 import com.master.udd.lucene.service.SearchService;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,9 +17,9 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/search")
+@AllArgsConstructor
 public class SearchController {
 
-    @Autowired
     private SearchService searchService;
 
     @GetMapping
