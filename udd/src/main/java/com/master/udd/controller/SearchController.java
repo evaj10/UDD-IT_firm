@@ -1,10 +1,14 @@
 package com.master.udd.controller;
 
 import com.master.udd.dto.SearchRequest;
+import com.master.udd.dto.SearchResponse;
 import com.master.udd.lucene.model.CVIndex;
 import com.master.udd.lucene.service.SearchService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,8 +27,12 @@ public class SearchController {
     private SearchService searchService;
 
     @GetMapping
-    public ResponseEntity<List<CVIndex>> search(@Valid @RequestBody SearchRequest searchRequest) {
-        List<CVIndex> foundCvs = searchService.search(searchRequest);
-        return new ResponseEntity<>(foundCvs, HttpStatus.OK);
+    public ResponseEntity<Page<SearchResponse>> search(
+            Pageable pageable,
+            @Valid @RequestBody SearchRequest searchRequest) {
+        List<SearchResponse> foundCvs = searchService.search(searchRequest, pageable);
+        return new ResponseEntity<>(
+                new PageImpl<>(foundCvs, pageable, foundCvs.size()),
+                HttpStatus.OK);
     }
 }

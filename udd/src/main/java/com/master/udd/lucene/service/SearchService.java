@@ -2,11 +2,13 @@ package com.master.udd.lucene.service;
 
 import com.master.udd.dto.SearchRequest;
 import com.master.udd.dto.SearchRequestField;
+import com.master.udd.dto.SearchResponse;
 import com.master.udd.lucene.model.CVIndex;
 import lombok.AllArgsConstructor;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
 import org.springframework.data.elasticsearch.core.SearchHit;
 import org.springframework.data.elasticsearch.core.SearchHits;
@@ -24,7 +26,7 @@ public class SearchService {
 
     private final ElasticsearchRestTemplate elasticsearchRestTemplate;
 
-    public List<CVIndex> search(SearchRequest searchRequest) {
+    public List<SearchResponse> search(SearchRequest searchRequest, Pageable pageable) {
         // za text polja ne koristiti termQuery nego matchQuery
         // (term proverava da li je identican unos onome sto je zapisano)
         // (ako je polje tekst, pretprocesira se i bude izmenje)
@@ -57,21 +59,39 @@ public class SearchService {
         // problem sa unified (defaultni highlighter) u kombinaciji sa phrase
         // https://github.com/elastic/elasticsearch/issues/29561
         // koristi se zbog toga plain
+        //default fragment size of 100 characters
+        //default number of fragments of 5
         HighlightBuilder highlightBuilder = new HighlightBuilder()
                                                 .highlighterType("plain")
                                                 .field("cvContent");
         NativeSearchQuery searchQuery = new NativeSearchQueryBuilder()
                 .withQuery(queryBuilder)
                 .withHighlightBuilder(highlightBuilder)
+                .withPageable(pageable)
                 .build();
 
-        SearchHits<CVIndex> searchHits = elasticsearchRestTemplate.search(searchQuery, CVIndex.class, IndexCoordinates.of("cvs"));
+        SearchHits<CVIndex> searchHits =
+                elasticsearchRestTemplate.search(searchQuery, CVIndex.class, IndexCoordinates.of("cvs"));
 
         // TODO obrada highlight-a
-        List<CVIndex> found = new ArrayList<>();
+        List<SearchResponse> found = new ArrayList<>();
+        String highlight;
         for (SearchHit<CVIndex> hit: searchHits.getSearchHits()) {
             CVIndex cvIndex = hit.getContent();
-            found.add(cvIndex);
+            if (hit.getHighlightFields().isEmpty()) {
+                // kreiraj staticki sazetak
+                highlight = "..." + cvIndex.getCvContent().substring(0, 100) + "...";
+            } else {
+                // dobavi kreiran dinamicki sazetak
+                highlight = "..." + hit.getHighlightFields().get("cvContent").get(0) + "...";
+            }
+            SearchResponse searchResponse = new SearchResponse(
+                    cvIndex.getApplicantName() + " " + cvIndex.getApplicantSurname(),
+                    cvIndex.getApplicantLocation().getLon(),
+                    cvIndex.getApplicantLocation().getLat(),
+                    highlight
+                    );
+            found.add(searchResponse);
         }
         return found;
     }
