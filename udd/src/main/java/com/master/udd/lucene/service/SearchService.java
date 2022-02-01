@@ -3,9 +3,14 @@ package com.master.udd.lucene.service;
 import com.master.udd.dto.SearchRequest;
 import com.master.udd.dto.SearchRequestField;
 import com.master.udd.dto.SearchResponse;
+import com.master.udd.exception.InvalidAddressException;
 import com.master.udd.lucene.model.CVIndex;
+import com.master.udd.model.Location;
+import com.master.udd.service.LocationService;
 import lombok.AllArgsConstructor;
+import org.elasticsearch.common.unit.DistanceUnit;
 import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.GeoDistanceQueryBuilder;
 import org.elasticsearch.index.query.MultiMatchQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
@@ -27,6 +32,7 @@ import java.util.List;
 @AllArgsConstructor
 public class SearchService {
 
+    private final LocationService locationService;
     private final ElasticsearchRestTemplate elasticsearchRestTemplate;
 
     public List<SearchResponse> basicSearch(String query, Pageable pageable) {
@@ -47,7 +53,7 @@ public class SearchService {
         return toSearchResponse(searchHits);
     }
 
-    public List<SearchResponse> search(SearchRequest searchRequest, Pageable pageable) {
+    public List<SearchResponse> search(SearchRequest searchRequest, Pageable pageable) throws InvalidAddressException {
         // za text polja ne koristiti termQuery nego matchQuery
         // (term proverava da li je identican unos onome sto je zapisano)
         // (ako je polje tekst, pretprocesira se i bude izmenje)
@@ -56,21 +62,26 @@ public class SearchService {
         // (da bismo mogli da nadjemo i kada ne unesemo precizno)
         // (da li ako je term radi ć i c varijanta? -> verovatno ne)
         // https://codecurated.com/blog/elasticsearch-text-vs-keyword/
-        BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();
-        for (SearchRequestField searchField : searchRequest.getFields()) {
-            if (searchField.isMustContain()) {
-                // must contain
-                if (searchField.isPhrase()) {
-                    queryBuilder.must(QueryBuilders.matchPhraseQuery(searchField.getField(), searchField.getQuery()));
+
+        // ako je pretraga po nekom od polja
+        BoolQueryBuilder queryBuilder = null;
+        if (searchRequest.getFields() != null && !searchRequest.getFields().isEmpty()) {
+            queryBuilder = QueryBuilders.boolQuery();
+            for (SearchRequestField searchField : searchRequest.getFields()) {
+                if (searchField.isMustContain()) {
+                    // must contain
+                    if (searchField.isPhrase()) {
+                        queryBuilder.must(QueryBuilders.matchPhraseQuery(searchField.getField(), searchField.getQuery()));
+                    } else {
+                        queryBuilder.must(QueryBuilders.matchQuery(searchField.getField(), searchField.getQuery()));
+                    }
                 } else {
-                    queryBuilder.must(QueryBuilders.matchQuery(searchField.getField(), searchField.getQuery()));
-                }
-            } else {
-                // should contain
-                if (searchField.isPhrase()) {
-                    queryBuilder.should(QueryBuilders.matchPhraseQuery(searchField.getField(), searchField.getQuery()));
-                } else {
-                    queryBuilder.should(QueryBuilders.matchQuery(searchField.getField(), searchField.getQuery()));
+                    // should contain
+                    if (searchField.isPhrase()) {
+                        queryBuilder.should(QueryBuilders.matchPhraseQuery(searchField.getField(), searchField.getQuery()));
+                    } else {
+                        queryBuilder.should(QueryBuilders.matchQuery(searchField.getField(), searchField.getQuery()));
+                    }
                 }
             }
         }
@@ -85,10 +96,36 @@ public class SearchService {
         HighlightBuilder highlightBuilder = new HighlightBuilder()
                                                 .highlighterType("plain")
                                                 .field("cvContent");
+
+        // pretraga po geolokaciji
+        GeoDistanceQueryBuilder geoDistanceBuilder = null;
+        if (searchRequest.getGeoLocation() != null) {
+            Location location = locationService.getLocationFromAddress(searchRequest.getGeoLocation().getCityName());
+            geoDistanceBuilder = new GeoDistanceQueryBuilder("applicantLocation")
+                    .point(location.getLat(), location.getLon())
+                    .distance(searchRequest.getGeoLocation().getRadius(),
+                            DistanceUnit.parseUnit(searchRequest.getGeoLocation().getRadiusUnit(),
+                                    DistanceUnit.KILOMETERS));
+        }
         NativeSearchQuery searchQuery = new NativeSearchQueryBuilder()
                 .withQuery(queryBuilder)
                 .withHighlightBuilder(highlightBuilder)
+                .withFilter(geoDistanceBuilder)
                 .withPageable(pageable)
+                .build();
+
+        SearchHits<CVIndex> searchHits =
+                elasticsearchRestTemplate.search(searchQuery, CVIndex.class, IndexCoordinates.of("cvs"));
+
+        return toSearchResponse(searchHits);
+    }
+
+    public List<SearchResponse> proximitySearch(Double lon, Double lat, Double radius, String radiusUnit) {
+        GeoDistanceQueryBuilder geoDistanceBuilder = new GeoDistanceQueryBuilder("applicantLocation")
+                                        .point(lon, lat)
+                                        .distance(radius, DistanceUnit.parseUnit(radiusUnit, DistanceUnit.KILOMETERS));
+        NativeSearchQuery searchQuery = new NativeSearchQueryBuilder()
+                .withFilter(geoDistanceBuilder)
                 .build();
 
         SearchHits<CVIndex> searchHits =
@@ -104,7 +141,7 @@ public class SearchService {
             CVIndex cvIndex = hit.getContent();
             if (hit.getHighlightFields().isEmpty()) {
                 // kreiraj staticki sazetak
-                highlight = "..." + cvIndex.getCvContent().substring(0, 100) + "...";
+                highlight = cvIndex.getCvContent().substring(0, 100) + "...";
             } else {
                 // dobavi kreiran dinamicki sazetak
                 highlight = "..." + hit.getHighlightFields().get("cvContent").get(0) + "...";

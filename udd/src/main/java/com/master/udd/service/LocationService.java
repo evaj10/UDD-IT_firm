@@ -39,7 +39,7 @@ public class LocationService {
                 LOCATION_API + API_KEY + queryAddress + API_FORMAT, LocationApiResponse[].class);
         if (locationResponse.getStatusCode().is2xxSuccessful()) {
             LocationApiResponse location = Objects.requireNonNull(locationResponse.getBody())[0];
-            return new Location(address, location.getLon(), location.getLat());
+            return new Location(address, location.getLat(), location.getLon());
         } else {
             throw new InvalidAddressException(address);
         }

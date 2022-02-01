@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
 @Getter
@@ -13,9 +14,11 @@ import javax.validation.constraints.Pattern;
 @AllArgsConstructor
 public class SearchRequestField {
 
+    @NotBlank
     @Pattern(regexp = "applicantName|applicantSurname|applicantEducation|cvContent")
     private String field;
 
+    @NotBlank
     private String query;
 
     private boolean phrase;

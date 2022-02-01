@@ -2,8 +2,11 @@ package com.master.udd.controller;
 
 import com.master.udd.dto.SearchRequest;
 import com.master.udd.dto.SearchResponse;
+import com.master.udd.exception.InvalidAddressException;
 import com.master.udd.lucene.model.CVIndex;
 import com.master.udd.lucene.service.SearchService;
+import com.master.udd.model.Location;
+import com.master.udd.service.LocationService;
 import lombok.AllArgsConstructor;
 import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,10 +43,11 @@ public class SearchController {
     @GetMapping
     public ResponseEntity<Page<SearchResponse>> search(
             Pageable pageable,
-            @Valid @RequestBody SearchRequest searchRequest) {
+            @Valid @RequestBody SearchRequest searchRequest) throws InvalidAddressException {
         List<SearchResponse> foundCvs = searchService.search(searchRequest, pageable);
         return new ResponseEntity<>(
                 new PageImpl<>(foundCvs, pageable, foundCvs.size()),
                 HttpStatus.OK);
     }
+
 }

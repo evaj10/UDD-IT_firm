@@ -1,5 +1,6 @@
 package com.master.udd.lucene.model;
 
+import com.master.udd.model.Location;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -59,11 +60,11 @@ public class CVIndex {
     @Field(type = FieldType.Text, searchAnalyzer = "serbian", analyzer = "serbian")
     private String cvContent;
 
-    public CVIndex(String applicantName, String applicantSurname, Integer applicantEducation, String content) {
+    public CVIndex(String applicantName, String applicantSurname, Integer applicantEducation, Location location, String content) {
         this.applicantName = applicantName;
         this.applicantSurname = applicantSurname;
         this.applicantEducation = applicantEducation;
-        this.applicantLocation = new GeoPoint(39.56553881520639, 2.650095237636433);
+        this.applicantLocation = new GeoPoint(location.getLat(), location.getLon());
         this.cvContent = content;
     }
 
