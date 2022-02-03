@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import org.apache.pdfbox.io.RandomAccessFile;
 import org.apache.pdfbox.pdfparser.PDFParser;
+import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.springframework.stereotype.Component;
 
@@ -16,7 +17,10 @@ public class PDFHandler {
             PDFParser parser = new PDFParser(new RandomAccessFile(file, "r"));
             parser.parse();
             PDFTextStripper textStripper = new PDFTextStripper();
-            return textStripper.getText(parser.getPDDocument());
+            PDDocument doc = parser.getPDDocument();
+            String text = textStripper.getText(doc);
+            doc.close();
+            return text;
         } catch (IOException e) {
             System.out.println("Greksa pri konvertovanju dokumenta u pdf");
         }

@@ -32,6 +32,6 @@ public class ApplicantDto {
     @NotNull
     private MultipartFile cv;
 
-    @NotNull
-    private MultipartFile letter;
+//    @NotNull
+//    private MultipartFile letter;
 }

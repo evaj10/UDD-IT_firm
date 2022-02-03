@@ -1,0 +1,75 @@
+<div class="container">
+  <form
+    [formGroup]="applicantForm"
+    [style.fontSize.px]="14"
+    class="form-center"
+  >
+    <div class="align-left"><h2>Job Application</h2></div>
+    <mat-form-field appearance="standard" floatLabel="always">
+      <mat-label>Name</mat-label>
+      <input matInput formControlName="name" placeholder="John" />
+      <mat-error *ngIf="applicantForm.get('name')?.invalid">{{
+        getFieldErrorMessage("name")
+      }}</mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="standard" floatLabel="always">
+      <mat-label>Surname</mat-label>
+      <input matInput formControlName="surname" placeholder="Doe" />
+      <mat-error *ngIf="applicantForm.get('surname')?.invalid">{{
+        getFieldErrorMessage("surname")
+      }}</mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="standard" floatLabel="always">
+      <mat-label>Email</mat-label>
+      <input
+        matInput
+        formControlName="email"
+        placeholder="john.doe@example.com"
+      />
+      <mat-error *ngIf="applicantForm.get('email')?.invalid">{{
+        getFieldErrorMessage("email")
+      }}</mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="standard" floatLabel="always">
+      <mat-label>Address</mat-label>
+      <input
+        matInput
+        formControlName="address"
+        placeholder="70 Amsterdam Ave New York"
+      />
+      <mat-error *ngIf="applicantForm.get('address')?.invalid">{{
+        getFieldErrorMessage("address")
+      }}</mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="standard" floatLabel="always">
+      <mat-label>Education Level</mat-label>
+      <mat-select formControlName="education" placeholder="Highschool">
+        <mat-option value="1">Elementary</mat-option>
+        <mat-option value="2">Highschool</mat-option>
+        <mat-option value="3">Higher</mat-option>
+      </mat-select>
+      <mat-error *ngIf="applicantForm.get('education')?.invalid">{{
+        getFieldErrorMessage("education")
+      }}</mat-error>
+    </mat-form-field>
+
+    <div class="align-left">
+      <label for="cv-upload" class="custom-file-upload"> CV Upload </label>
+      <span [innerText]="fileName" class="custom-file-span"></span>
+      <input id="cv-upload" type="file" (change)="displayFileName($event)" />
+      <mat-error *ngIf="!file">CV file is required</mat-error>
+      <mat-error *ngIf="file && fileType !== 'pdf'"
+        >CV file must be in .pdf format</mat-error
+      >
+    </div>
+
+    <button
+      mat-flat-button
+      color="primary"
+      [disabled]="applicantForm.invalid || fileType !== 'pdf'"
+      (click)="submitApplication()"
+    >
+      SUBMIT
+    </button>
+  </form>
+</div>

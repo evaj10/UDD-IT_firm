@@ -24,13 +24,13 @@ public class ApplicantService {
     public Applicant save(ApplicantDto applicantDto) throws IOException, EntityNotFoundException, InvalidAddressException {
         String cvFileLocation = fileStorageService.saveFile(applicantDto.getCv());
         CV cv = new CV(cvFileLocation);
-        String letterFileLocation = fileStorageService.saveFile(applicantDto.getLetter());
-        Letter letter = new Letter(letterFileLocation);
+//        String letterFileLocation = fileStorageService.saveFile(applicantDto.getLetter());
+//        Letter letter = new Letter(letterFileLocation);
         EducationLevel education = educationService.findById(applicantDto.getEducationLevelId());
         Location location = locationService.getLocationFromAddress(applicantDto.getAddress());
         Applicant applicant = new Applicant(
                 applicantDto.getName(), applicantDto.getSurname(), applicantDto.getEmail(),
-                location, education, cv, letter);
+                location, education, cv);
         // cuvanje u relacionu bazu
         applicant = applicantRepository.save(applicant);
         // cuvanje u ES ineksnu strukturu

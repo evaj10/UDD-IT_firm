@@ -44,8 +44,8 @@ public class Applicant {
     @JoinColumn(name = "cv_id", referencedColumnName = "id")
     private CV cv;
 
-    @NonNull
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "letter_id", referencedColumnName = "id")
-    private Letter letter;
+//    @NonNull
+//    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+//    @JoinColumn(name = "letter_id", referencedColumnName = "id")
+//    private Letter letter;
 }

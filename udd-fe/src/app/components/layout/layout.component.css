@@ -1,0 +1,18 @@
+.container {
+  display: flex;
+  height: 100%;
+}
+
+.container_sidebar {
+  width: 7%;
+  background: rgba(92, 220, 224, 0.39);
+}
+
+.container_main {
+  /* Take the remaining width */
+  flex: 1;
+  /* Make it scrollable */
+  overflow: auto;
+  background: white;
+  /* background: rgba(86, 172, 253, 0.596); */
+}
