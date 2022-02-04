@@ -1,93 +1,239 @@
 <div class="container">
   <div class="sticky-search">
-    <mat-expansion-panel>
-      <mat-expansion-panel-header>
-        <mat-panel-title> Search for: </mat-panel-title>
-        <mat-panel-description> Generisi neki izraz </mat-panel-description>
-      </mat-expansion-panel-header>
-      <form
-        [formGroup]="searchForm"
-        [style.fontSize.px]="14"
-        class="form-center"
+    <mat-accordion>
+      <mat-expansion-panel
+        [expanded]="expandePanel"
+        (opened)="setExpandePanel()"
       >
-        <div class="search-field">
-          <mat-form-field appearance="fill" floatLabel="always">
-            <mat-label>Name</mat-label>
-            <input matInput placeholder="Search name" />
-          </mat-form-field>
-          <mat-checkbox>Phrase?</mat-checkbox>
-          <mat-button-toggle-group>
-            <mat-button-toggle value="and">&</mat-button-toggle>
-            <mat-button-toggle value="or">||</mat-button-toggle>
-          </mat-button-toggle-group>
-        </div>
-        <div class="search-field">
-          <mat-form-field appearance="fill" floatLabel="always">
-            <mat-label>Surname</mat-label>
-            <input matInput placeholder="Search surname" />
-          </mat-form-field>
-          <mat-checkbox>Phrase?</mat-checkbox>
-          <mat-button-toggle-group>
-            <mat-button-toggle value="and">&</mat-button-toggle>
-            <mat-button-toggle value="or">||</mat-button-toggle>
-          </mat-button-toggle-group>
-        </div>
-        <div class="search-field">
-          <div class="range">
-            <div class="range-fields">
-              <mat-form-field appearance="fill" floatLabel="always">
-                <mat-label>Minimal Education Level</mat-label>
-                <mat-select placeholder="Choose minimal education level">
-                  <mat-option value="1">4 razreda osnovne skole</mat-option>
-                  <mat-option value="2">osnovna skola</mat-option>
-                  <mat-option value="3">trogodisnja srednja skola</mat-option>
-                  <mat-option value="4">srednja skola</mat-option>
-                  <mat-option value="5">strukovne studije</mat-option>
-                  <mat-option value="6">osnovne akademske studije</mat-option>
-                  <mat-option value="7">master studije</mat-option>
-                  <mat-option value="8">doktorske studije</mat-option>
-                </mat-select>
-              </mat-form-field>
+        <mat-expansion-panel-header>
+          <mat-panel-title>Advanced Search</mat-panel-title>
+          <mat-panel-description>click to view options</mat-panel-description>
+        </mat-expansion-panel-header>
+        <form
+          [formGroup]="searchForm"
+          [style.fontSize.px]="14"
+          class="form-center"
+        >
+          <div class="form-layout">
+            <div class="inline left">
+              <h2>Content Search</h2>
+              <div class="search-field">
+                <mat-form-field appearance="fill" floatLabel="always">
+                  <mat-label>Name</mat-label>
+                  <input
+                    matInput
+                    placeholder="Search name"
+                    formControlName="applicantName"
+                  />
+                </mat-form-field>
+                <mat-checkbox
+                  matTooltip="Search result must fully equal the input"
+                  matTooltipPosition="above"
+                  formControlName="applicantNamePhrase"
+                  >Phrase?</mat-checkbox
+                >
+                <mat-button-toggle-group
+                  value="true"
+                  formControlName="applicantNameMust"
+                >
+                  <mat-button-toggle
+                    value="true"
+                    matTooltip="Search result must contain the input"
+                    matTooltipPosition="above"
+                    >&</mat-button-toggle
+                  >
+                  <mat-button-toggle
+                    value="false"
+                    matTooltip="Search result should contain the input"
+                    matTooltipPosition="above"
+                    >||</mat-button-toggle
+                  >
+                </mat-button-toggle-group>
+              </div>
+              <div class="search-field">
+                <mat-form-field appearance="fill" floatLabel="always">
+                  <mat-label>Surname</mat-label>
+                  <input
+                    matInput
+                    placeholder="Search surname"
+                    formControlName="applicantSurname"
+                  />
+                </mat-form-field>
+                <mat-checkbox
+                  formControlName="applicantSurnamePhrase"
+                  matTooltip="Search result must fully equal the input"
+                  matTooltipPosition="above"
+                  >Phrase?</mat-checkbox
+                >
+                <mat-button-toggle-group
+                  value="true"
+                  formControlName="applicantSurnameMust"
+                >
+                  <mat-button-toggle
+                    value="true"
+                    matTooltip="Search result must contain the input"
+                    matTooltipPosition="above"
+                    >&</mat-button-toggle
+                  >
+                  <mat-button-toggle
+                    value="false"
+                    matTooltip="Search result should contain the input"
+                    matTooltipPosition="above"
+                    >||</mat-button-toggle
+                  >
+                </mat-button-toggle-group>
+              </div>
+              <div class="search-field">
+                <div class="range">
+                  <div class="range-fields">
+                    <mat-form-field appearance="fill" floatLabel="always">
+                      <mat-label>Minimal Education Level</mat-label>
+                      <mat-select
+                        formControlName="applicantEducationLowerBound"
+                        placeholder="Choose minimal education level"
+                      >
+                        <mat-option value="1"
+                          >4 razreda osnovne skole</mat-option
+                        >
+                        <mat-option value="2">osnovna skola</mat-option>
+                        <mat-option value="3"
+                          >trogodisnja srednja skola</mat-option
+                        >
+                        <mat-option value="4">srednja skola</mat-option>
+                        <mat-option value="5">strukovne studije</mat-option>
+                        <mat-option value="6"
+                          >osnovne akademske studije</mat-option
+                        >
+                        <mat-option value="7">master studije</mat-option>
+                        <mat-option value="8">doktorske studije</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="range-fields">
+                    <mat-form-field appearance="fill" floatLabel="always">
+                      <mat-label>Maximal Education Level</mat-label>
+                      <mat-select
+                        formControlName="applicantEducationUpperBound"
+                        placeholder="Choose maximal education level"
+                      >
+                        <mat-option value="1"
+                          >4 razreda osnovne skole</mat-option
+                        >
+                        <mat-option value="2">osnovna skola</mat-option>
+                        <mat-option value="3"
+                          >trogodisnja srednja skola</mat-option
+                        >
+                        <mat-option value="4">srednja skola</mat-option>
+                        <mat-option value="5">strukovne studije</mat-option>
+                        <mat-option value="6"
+                          >osnovne akademske studije</mat-option
+                        >
+                        <mat-option value="7">master studije</mat-option>
+                        <mat-option value="8">doktorske studije</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+                <mat-button-toggle-group
+                  value="true"
+                  formControlName="applicantEducationMust"
+                  class="toggle-range"
+                >
+                  <mat-button-toggle
+                    value="true"
+                    matTooltip="Search result must contain the input"
+                    matTooltipPosition="above"
+                    >&</mat-button-toggle
+                  >
+                  <mat-button-toggle
+                    value="false"
+                    matTooltip="Search result should contain the input"
+                    matTooltipPosition="above"
+                    >||</mat-button-toggle
+                  >
+                </mat-button-toggle-group>
+              </div>
+              <div class="search-field">
+                <mat-form-field appearance="fill" floatLabel="always">
+                  <mat-label>CV Content</mat-label>
+                  <textarea
+                    matInput
+                    placeholder="Search CV content"
+                    formControlName="applicantCvContent"
+                  ></textarea>
+                </mat-form-field>
+                <mat-checkbox
+                  formControlName="applicantCvContentPhrase"
+                  matTooltip="Search result must fully equal the input"
+                  matTooltipPosition="above"
+                  >Phrase?</mat-checkbox
+                >
+                <mat-button-toggle-group
+                  value="true"
+                  formControlName="applicantCvContentMust"
+                >
+                  <mat-button-toggle
+                    value="true"
+                    matTooltip="Search result must contain the input"
+                    matTooltipPosition="above"
+                    >&</mat-button-toggle
+                  >
+                  <mat-button-toggle
+                    value="false"
+                    matTooltip="Search result should contain the input"
+                    matTooltipPosition="above"
+                    >||</mat-button-toggle
+                  >
+                </mat-button-toggle-group>
+              </div>
             </div>
-            <div class="range-fields">
-              <mat-form-field appearance="fill" floatLabel="always">
-                <mat-label>Maximal Education Level</mat-label>
-                <mat-select placeholder="Choose maximal education level">
-                  <mat-option value="1">4 razreda osnovne skole</mat-option>
-                  <mat-option value="2">osnovna skola</mat-option>
-                  <mat-option value="3">trogodisnja srednja skola</mat-option>
-                  <mat-option value="4">srednja skola</mat-option>
-                  <mat-option value="5">strukovne studije</mat-option>
-                  <mat-option value="6">osnovne akademske studije</mat-option>
-                  <mat-option value="7">master studije</mat-option>
-                  <mat-option value="8">doktorske studije</mat-option>
-                </mat-select>
-              </mat-form-field>
+            <div class="inline right">
+              <h2>Location Search</h2>
+              <div class="location-fields">
+                <mat-form-field appearance="fill" floatLabel="always">
+                  <mat-label>City Name</mat-label>
+                  <input
+                    matInput
+                    placeholder="City Name"
+                    formControlName="cityName"
+                  />
+                </mat-form-field>
+              </div>
+              <div class="location-fields">
+                <mat-form-field appearance="fill" floatLabel="always">
+                  <mat-label>Search Radius</mat-label>
+                  <input
+                    matInput
+                    type="number"
+                    min="1"
+                    placeholder="100"
+                    formControlName="radius"
+                  />
+                </mat-form-field>
+              </div>
+              <div class="location-fields">
+                <mat-form-field appearance="fill" floatLabel="always">
+                  <mat-label>Radius Unit</mat-label>
+                  <mat-select
+                    placeholder="Choose distance measuring unit"
+                    formControlName="radiusUnit"
+                  >
+                    <mat-option value="km">Kilometers</mat-option>
+                    <mat-option value="m">Meters</mat-option>
+                    <mat-option value="mi">Miles</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
             </div>
           </div>
-          <mat-button-toggle-group>
-            <mat-button-toggle value="and">&</mat-button-toggle>
-            <mat-button-toggle value="or">||</mat-button-toggle>
-          </mat-button-toggle-group>
-        </div>
-        <div class="search-field">
-          <mat-form-field appearance="fill" floatLabel="always">
-            <mat-label>CV Content</mat-label>
-            <textarea matInput placeholder="Search CV content"></textarea>
-          </mat-form-field>
-          <mat-checkbox>Phrase?</mat-checkbox>
-          <mat-button-toggle-group>
-            <mat-button-toggle value="and">&</mat-button-toggle>
-            <mat-button-toggle value="or">||</mat-button-toggle>
-          </mat-button-toggle-group>
-        </div>
-        <div class="center-text">
-          <button mat-flat-button color="primary" (click)="search()">
-            SEARCH
-          </button>
-        </div>
-      </form>
-    </mat-expansion-panel>
+          <div class="center-text">
+            <button mat-flat-button color="primary" (click)="search()">
+              SEARCH
+            </button>
+          </div>
+        </form>
+      </mat-expansion-panel>
+    </mat-accordion>
   </div>
   <div class="content">
     <app-result-list

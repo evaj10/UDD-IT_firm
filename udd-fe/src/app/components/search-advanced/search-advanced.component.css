@@ -4,7 +4,6 @@
 
 .form-center {
   padding: 25px 40px 25px 40px;
-  width: 100%;
 }
 
 .align-left {
@@ -16,8 +15,6 @@
   position: fixed;
   top: 0;
   width: 91.7%;
-  display: flex;
-  justify-content: center;
   z-index: 100;
 }
 
@@ -32,7 +29,7 @@ mat-form-field {
 }
 
 mat-expansion-panel {
-  margin: 0 180px;
+  margin: 0 123px;
   margin-top: 25px;
 }
 
@@ -55,21 +52,23 @@ mat-expansion-panel {
 }
 
 mat-checkbox {
-  margin-left: 15px;
+  margin-left: 10px;
 }
-mat-button-toggle-group {
+.search-field mat-button-toggle-group {
   height: 36px;
   vertical-align: middle;
-  margin-left: 15px;
+  margin-left: 10px;
 }
 ::ng-deep
+  .search-field
   .mat-button-toggle-appearance-standard
   .mat-button-toggle-label-content {
   line-height: 36px;
 }
-::ng-deep .mat-button-toggle-checked {
+::ng-deep .search-field .mat-button-toggle-checked {
   background-color: #377a7c;
   color: white !important;
+  border-radius: 3px;
 }
 ::ng-deep
   .mat-checkbox-checked.mat-accent
@@ -93,7 +92,7 @@ mat-button-toggle-group {
   margin-bottom: 1.34375em;
 }
 .range-fields mat-form-field {
-  width: 95% !important;
+  width: 94% !important;
 }
 .range {
   width: 53%;
@@ -103,5 +102,23 @@ mat-checkbox {
 }
 .center-text {
   text-align: center;
+}
+.inline {
+  display: inline-block;
+}
+.inline.left {
+  width: 70%;
+}
+.inline.right {
+  width: 30%;
   margin-left: -60px;
+}
+.form-layout {
+  display: flex;
+}
+.toggle-range {
+  margin-left: 82px !important;
+}
+.location-fields mat-form-field {
+  width: 100% !important;
 }

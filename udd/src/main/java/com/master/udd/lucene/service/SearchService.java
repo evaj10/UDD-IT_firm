@@ -1,19 +1,13 @@
 package com.master.udd.lucene.service;
 
-import com.master.udd.dto.BasicSearchRequest;
-import com.master.udd.dto.SearchRequest;
-import com.master.udd.dto.SearchRequestField;
-import com.master.udd.dto.SearchResponse;
+import com.master.udd.dto.*;
 import com.master.udd.exception.InvalidAddressException;
 import com.master.udd.lucene.model.CVIndex;
 import com.master.udd.model.Location;
 import com.master.udd.service.LocationService;
 import lombok.AllArgsConstructor;
 import org.elasticsearch.common.unit.DistanceUnit;
-import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.GeoDistanceQueryBuilder;
-import org.elasticsearch.index.query.MultiMatchQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.index.query.*;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -102,9 +96,8 @@ public class SearchService {
         // https://codecurated.com/blog/elasticsearch-text-vs-keyword/
 
         // ako je pretraga po nekom od polja
-        BoolQueryBuilder queryBuilder = null;
+        BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();
         if (searchRequest.getFields() != null && !searchRequest.getFields().isEmpty()) {
-            queryBuilder = QueryBuilders.boolQuery();
             for (SearchRequestField searchField : searchRequest.getFields()) {
                 if (searchField.isMustContain()) {
                     // must contain
@@ -121,6 +114,17 @@ public class SearchService {
                         queryBuilder.should(QueryBuilders.matchQuery(searchField.getField(), searchField.getQuery()));
                     }
                 }
+            }
+        }
+        RangeRequest rangeRequest = searchRequest.getRangeRequest();
+        if (rangeRequest != null) {
+            RangeQueryBuilder rangeBuilder = new RangeQueryBuilder(rangeRequest.getField())
+                                                    .from(rangeRequest.getLowerBound(), true)
+                                                    .to(rangeRequest.getUpperBound(), true);
+            if (rangeRequest.isMustContain()) {
+                queryBuilder.must(rangeBuilder);
+            } else {
+                queryBuilder.should(rangeBuilder);
             }
         }
         // hajlajtovanje (dinamicki sazetak) ima smisla da se radi samo za sadrzaj
