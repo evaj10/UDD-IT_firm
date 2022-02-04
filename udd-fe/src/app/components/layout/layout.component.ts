@@ -17,7 +17,7 @@ export class LayoutComponent implements OnInit {
   faUser = faUserTie;
   faStats = faFileAlt;
 
-  currentView = 'basicSearch';
+  currentView = 'applicant';
 
   constructor() {}
 

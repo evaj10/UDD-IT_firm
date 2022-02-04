@@ -1,1 +1,98 @@
-<p>search-advanced works!</p>
+<div class="container">
+  <div class="sticky-search">
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title> Search for: </mat-panel-title>
+        <mat-panel-description> Generisi neki izraz </mat-panel-description>
+      </mat-expansion-panel-header>
+      <form
+        [formGroup]="searchForm"
+        [style.fontSize.px]="14"
+        class="form-center"
+      >
+        <div class="search-field">
+          <mat-form-field appearance="fill" floatLabel="always">
+            <mat-label>Name</mat-label>
+            <input matInput placeholder="Search name" />
+          </mat-form-field>
+          <mat-checkbox>Phrase?</mat-checkbox>
+          <mat-button-toggle-group>
+            <mat-button-toggle value="and">&</mat-button-toggle>
+            <mat-button-toggle value="or">||</mat-button-toggle>
+          </mat-button-toggle-group>
+        </div>
+        <div class="search-field">
+          <mat-form-field appearance="fill" floatLabel="always">
+            <mat-label>Surname</mat-label>
+            <input matInput placeholder="Search surname" />
+          </mat-form-field>
+          <mat-checkbox>Phrase?</mat-checkbox>
+          <mat-button-toggle-group>
+            <mat-button-toggle value="and">&</mat-button-toggle>
+            <mat-button-toggle value="or">||</mat-button-toggle>
+          </mat-button-toggle-group>
+        </div>
+        <div class="search-field">
+          <div class="range">
+            <div class="range-fields">
+              <mat-form-field appearance="fill" floatLabel="always">
+                <mat-label>Minimal Education Level</mat-label>
+                <mat-select placeholder="Choose minimal education level">
+                  <mat-option value="1">4 razreda osnovne skole</mat-option>
+                  <mat-option value="2">osnovna skola</mat-option>
+                  <mat-option value="3">trogodisnja srednja skola</mat-option>
+                  <mat-option value="4">srednja skola</mat-option>
+                  <mat-option value="5">strukovne studije</mat-option>
+                  <mat-option value="6">osnovne akademske studije</mat-option>
+                  <mat-option value="7">master studije</mat-option>
+                  <mat-option value="8">doktorske studije</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="range-fields">
+              <mat-form-field appearance="fill" floatLabel="always">
+                <mat-label>Maximal Education Level</mat-label>
+                <mat-select placeholder="Choose maximal education level">
+                  <mat-option value="1">4 razreda osnovne skole</mat-option>
+                  <mat-option value="2">osnovna skola</mat-option>
+                  <mat-option value="3">trogodisnja srednja skola</mat-option>
+                  <mat-option value="4">srednja skola</mat-option>
+                  <mat-option value="5">strukovne studije</mat-option>
+                  <mat-option value="6">osnovne akademske studije</mat-option>
+                  <mat-option value="7">master studije</mat-option>
+                  <mat-option value="8">doktorske studije</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+          <mat-button-toggle-group>
+            <mat-button-toggle value="and">&</mat-button-toggle>
+            <mat-button-toggle value="or">||</mat-button-toggle>
+          </mat-button-toggle-group>
+        </div>
+        <div class="search-field">
+          <mat-form-field appearance="fill" floatLabel="always">
+            <mat-label>CV Content</mat-label>
+            <textarea matInput placeholder="Search CV content"></textarea>
+          </mat-form-field>
+          <mat-checkbox>Phrase?</mat-checkbox>
+          <mat-button-toggle-group>
+            <mat-button-toggle value="and">&</mat-button-toggle>
+            <mat-button-toggle value="or">||</mat-button-toggle>
+          </mat-button-toggle-group>
+        </div>
+        <div class="center-text">
+          <button mat-flat-button color="primary" (click)="search()">
+            SEARCH
+          </button>
+        </div>
+      </form>
+    </mat-expansion-panel>
+  </div>
+  <div class="content">
+    <app-result-list
+      [results]="results"
+      (pageChanged)="pageChanged($event)"
+    ></app-result-list>
+  </div>
+</div>

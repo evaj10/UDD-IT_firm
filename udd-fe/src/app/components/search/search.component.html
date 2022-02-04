@@ -32,6 +32,9 @@
     </form>
   </div>
   <div class="content">
-    <app-result-list [results]="results"></app-result-list>
+    <app-result-list
+      [results]="results"
+      (pageChanged)="pageChanged($event)"
+    ></app-result-list>
   </div>
 </div>

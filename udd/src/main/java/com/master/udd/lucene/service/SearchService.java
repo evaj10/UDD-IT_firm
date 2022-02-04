@@ -15,6 +15,8 @@ import org.elasticsearch.index.query.GeoDistanceQueryBuilder;
 import org.elasticsearch.index.query.MultiMatchQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
 import org.springframework.data.elasticsearch.core.SearchHit;
@@ -38,7 +40,7 @@ public class SearchService {
     private final LocationService locationService;
     private final ElasticsearchRestTemplate elasticsearchRestTemplate;
 
-    public List<SearchResponse> basicSearch(BasicSearchRequest searchRequest, Pageable pageable) {
+    public Page<SearchResponse> basicSearch(BasicSearchRequest searchRequest, Pageable pageable) {
         HighlightBuilder highlightBuilder = new HighlightBuilder()
                 .highlighterType("plain")
                 .field("cvContent")
@@ -86,10 +88,10 @@ public class SearchService {
         SearchHits<CVIndex> searchHits =
                 elasticsearchRestTemplate.search(searchQuery, CVIndex.class, IndexCoordinates.of("cvs"));
 
-        return toSearchResponse(searchHits);
+        return toSearchResponse(searchHits, pageable);
     }
 
-    public List<SearchResponse> search(SearchRequest searchRequest, Pageable pageable) throws InvalidAddressException {
+    public Page<SearchResponse> search(SearchRequest searchRequest, Pageable pageable) throws InvalidAddressException {
         // za text polja ne koristiti termQuery nego matchQuery
         // (term proverava da li je identican unos onome sto je zapisano)
         // (ako je polje tekst, pretprocesira se i bude izmenje)
@@ -155,24 +157,10 @@ public class SearchService {
         SearchHits<CVIndex> searchHits =
                 elasticsearchRestTemplate.search(searchQuery, CVIndex.class, IndexCoordinates.of("cvs"));
 
-        return toSearchResponse(searchHits);
+        return toSearchResponse(searchHits, pageable);
     }
 
-    public List<SearchResponse> proximitySearch(Double lon, Double lat, Double radius, String radiusUnit) {
-        GeoDistanceQueryBuilder geoDistanceBuilder = new GeoDistanceQueryBuilder("applicantLocation")
-                                        .point(lon, lat)
-                                        .distance(radius, DistanceUnit.parseUnit(radiusUnit, DistanceUnit.KILOMETERS));
-        NativeSearchQuery searchQuery = new NativeSearchQueryBuilder()
-                .withFilter(geoDistanceBuilder)
-                .build();
-
-        SearchHits<CVIndex> searchHits =
-                elasticsearchRestTemplate.search(searchQuery, CVIndex.class, IndexCoordinates.of("cvs"));
-
-        return toSearchResponse(searchHits);
-    }
-
-    List<SearchResponse> toSearchResponse(SearchHits<CVIndex> searchHits) {
+    Page<SearchResponse> toSearchResponse(SearchHits<CVIndex> searchHits, Pageable pageable) {
         List<SearchResponse> found = new ArrayList<>();
         String highlight;
         for (SearchHit<CVIndex> hit: searchHits.getSearchHits()) {
@@ -193,6 +181,6 @@ public class SearchService {
             );
             found.add(searchResponse);
         }
-        return found;
+        return new PageImpl<>(found, pageable, searchHits.getTotalHits());
     }
 }

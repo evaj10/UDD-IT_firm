@@ -10,9 +10,9 @@ import { ResultPage } from '../model/result-page.model';
 export class SearchService {
   constructor(private http: HttpClient) {}
 
-  basicSearch(searchRequest: BasicSearch) {
+  basicSearch(searchRequest: BasicSearch, page: number, size: number) {
     return this.http.post<ResultPage>(
-      environment.apiEndpoint + '/search/basic',
+      environment.apiEndpoint + '/search/basic?page=' + page + '&size=' + size,
       searchRequest
     );
   }

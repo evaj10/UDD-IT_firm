@@ -1,0 +1,107 @@
+.container {
+  align-items: center;
+}
+
+.form-center {
+  padding: 25px 40px 25px 40px;
+  width: 100%;
+}
+
+.align-left {
+  text-align: left;
+}
+
+.sticky-search {
+  background-color: white;
+  position: fixed;
+  top: 0;
+  width: 91.7%;
+  display: flex;
+  justify-content: center;
+  z-index: 100;
+}
+
+.content {
+  margin: 100px auto 50px 70px;
+  width: 80%;
+  display: block;
+}
+
+mat-form-field {
+  width: 50%;
+}
+
+mat-expansion-panel {
+  margin: 0 180px;
+  margin-top: 25px;
+}
+
+.example-action-buttons {
+  padding-bottom: 20px;
+}
+
+.example-headers-align .mat-expansion-panel-header-title,
+.example-headers-align .mat-expansion-panel-header-description {
+  flex-basis: 0;
+}
+
+.example-headers-align .mat-expansion-panel-header-description {
+  justify-content: space-between;
+  align-items: center;
+}
+
+.example-headers-align .mat-form-field + .mat-form-field {
+  margin-left: 8px;
+}
+
+mat-checkbox {
+  margin-left: 15px;
+}
+mat-button-toggle-group {
+  height: 36px;
+  vertical-align: middle;
+  margin-left: 15px;
+}
+::ng-deep
+  .mat-button-toggle-appearance-standard
+  .mat-button-toggle-label-content {
+  line-height: 36px;
+}
+::ng-deep .mat-button-toggle-checked {
+  background-color: #377a7c;
+  color: white !important;
+}
+::ng-deep
+  .mat-checkbox-checked.mat-accent
+  .mat-checkbox-ripple
+  .mat-ripple-element {
+  background-color: #377a7c !important;
+}
+::ng-deep .mat-checkbox-checked.mat-accent .mat-checkbox-background,
+.mat-checkbox-indeterminate.mat-accent .mat-checkbox-background {
+  background-color: #377a7c;
+}
+
+.search-field {
+  display: flex;
+  align-items: center;
+}
+mat-checkbox {
+  padding-bottom: 1.34375em;
+}
+mat-button-toggle-group {
+  margin-bottom: 1.34375em;
+}
+.range-fields mat-form-field {
+  width: 95% !important;
+}
+.range {
+  width: 53%;
+}
+mat-checkbox {
+  margin-left: 15px;
+}
+.center-text {
+  text-align: center;
+  margin-left: -60px;
+}

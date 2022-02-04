@@ -31,20 +31,16 @@ public class SearchController {
             Pageable pageable,
             @Valid @RequestBody BasicSearchRequest searchRequest) {
         LOGGER.info("query=[" + searchRequest.getQuery() + "] ip=90.116.164.204");
-        List<SearchResponse> foundCvs = searchService.basicSearch(searchRequest, pageable);
-        return new ResponseEntity<>(
-                new PageImpl<>(foundCvs, pageable, foundCvs.size()),
-                HttpStatus.OK);
+        Page<SearchResponse> foundCvs = searchService.basicSearch(searchRequest, pageable);
+        return new ResponseEntity<>(foundCvs, HttpStatus.OK);
     }
 
     @PostMapping("/advanced")
     public ResponseEntity<Page<SearchResponse>> search(
             Pageable pageable,
             @Valid @RequestBody SearchRequest searchRequest) throws InvalidAddressException {
-        List<SearchResponse> foundCvs = searchService.search(searchRequest, pageable);
-        return new ResponseEntity<>(
-                new PageImpl<>(foundCvs, pageable, foundCvs.size()),
-                HttpStatus.OK);
+        Page<SearchResponse> foundCvs = searchService.search(searchRequest, pageable);
+        return new ResponseEntity<>(foundCvs, HttpStatus.OK);
     }
 
 }

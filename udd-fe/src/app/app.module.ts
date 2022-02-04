@@ -21,6 +21,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @NgModule({
@@ -47,6 +49,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     MatButtonToggleModule,
     MatTooltipModule,
     MatPaginatorModule,
+    MatExpansionModule,
+    MatCheckboxModule,
     FontAwesomeModule,
   ],
   providers: [],
