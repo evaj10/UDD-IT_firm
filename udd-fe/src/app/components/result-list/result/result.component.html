@@ -1,0 +1,9 @@
+<div style="margin-bottom: 10px">
+  <h2>
+    <a href="#">{{ result.fullName }}</a>
+  </h2>
+  <h4>Email contact: {{ result.email }}</h4>
+  <h4>Education level: {{ result.educationLevel }}</h4>
+  <h4>Address: {{ result.address }}</h4>
+  <p [innerHtml]="result.highlight"></p>
+</div>

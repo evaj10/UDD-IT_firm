@@ -23,7 +23,8 @@ public class Indexer {
         String filename = applicant.getCv().getFileLocation();
         String cvContent = fileHandler.getText(new File(filename));
         CVIndex cvIndex = new CVIndex(applicant.getName(), applicant.getSurname(),
-                applicant.getEducationLevel().getLevel(), applicant.getLocation(), cvContent);
+                applicant.getEducationLevel().getLevel(), applicant.getLocation(), cvContent,
+                applicant.getEmail(), applicant.getEducationLevel().getName());
         cvIndexRepository.save(cvIndex);
     }
 

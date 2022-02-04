@@ -1,1 +1,37 @@
-<p>search works!</p>
+<div class="container">
+  <div class="sticky-search">
+    <form [formGroup]="searchForm" [style.fontSize.px]="14" class="form-center">
+      <mat-form-field appearance="fill" floatLabel="always" class="left-field">
+        <mat-label>WHAT</mat-label>
+        <input matInput formControlName="query" placeholder="Search term" />
+      </mat-form-field>
+      <mat-form-field appearance="fill" floatLabel="always" class="right-field">
+        <mat-label>WHERE</mat-label>
+        <mat-select
+          value="all"
+          formControlName="field"
+          placeholder="Everywhere"
+        >
+          <mat-option value="all">Everywhere</mat-option>
+          <mat-option value="applicantName">Applicant Name</mat-option>
+          <mat-option value="applicantSurname">Applicant Surname</mat-option>
+          <mat-option value="applicantEducation"
+            >Applicant Education (numeric)</mat-option
+          >
+          <mat-option value="cvContent">CV Content</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <button
+        mat-flat-button
+        color="primary"
+        class="search-btn"
+        (click)="search()"
+      >
+        SEARCH
+      </button>
+    </form>
+  </div>
+  <div class="content">
+    <app-result-list [results]="results"></app-result-list>
+  </div>
+</div>

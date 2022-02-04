@@ -13,11 +13,11 @@ public class SearchResponse {
 
     private String fullName;
 
-//    private String educationLevel;
+    private String email;
 
-    private Double lon;
+    private String educationLevel;
 
-    private Double lat;
+    private String address;
 
     private String highlight;
 }

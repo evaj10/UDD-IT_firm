@@ -1,0 +1,11 @@
+<app-result
+  [result]="result"
+  *ngFor="let result of results.content"
+></app-result>
+<mat-paginator
+  [length]="results.totalElements"
+  [pageSize]="10"
+  [pageSizeOptions]="[5, 10, 25, 100]"
+  (page)="onPaginateChange($event)"
+>
+</mat-paginator>

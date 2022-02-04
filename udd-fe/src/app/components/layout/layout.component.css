@@ -5,6 +5,7 @@
 
 .container_sidebar {
   width: 7%;
+  text-align: center;
   background: rgba(92, 220, 224, 0.39);
 }
 
@@ -15,4 +16,24 @@
   overflow: auto;
   background: white;
   /* background: rgba(86, 172, 253, 0.596); */
+}
+
+.search-btns {
+  margin-top: 25px;
+}
+
+fa-icon {
+  font-size: 28px;
+}
+
+h2 {
+  margin-bottom: 0px;
+}
+h3 {
+  margin-top: -8px;
+}
+
+mat-button-toggle-group {
+  width: 70%;
+  border-radius: 7px;
 }

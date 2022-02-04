@@ -60,12 +60,26 @@ public class CVIndex {
     @Field(type = FieldType.Text, searchAnalyzer = "serbian", analyzer = "serbian")
     private String cvContent;
 
-    public CVIndex(String applicantName, String applicantSurname, Integer applicantEducation, Location location, String content) {
+    @Field(type = FieldType.Text, index = false, store = true)
+    private String applicantEmail;
+
+    @Field(type = FieldType.Text, index = false, store = true)
+    private String applicantAddress;
+
+    @Field(type = FieldType.Text, index = false, store = true)
+    private String applicantEducationName;
+
+    public CVIndex(String applicantName, String applicantSurname,
+                   Integer applicantEducation, Location location, String content,
+                   String applicantEmail, String applicantEducationName) {
         this.applicantName = applicantName;
         this.applicantSurname = applicantSurname;
         this.applicantEducation = applicantEducation;
         this.applicantLocation = new GeoPoint(location.getLat(), location.getLon());
         this.cvContent = content;
+        this.applicantEmail = applicantEmail;
+        this.applicantAddress = location.getAddress();
+        this.applicantEducationName = applicantEducationName;
     }
 
 }

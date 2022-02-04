@@ -1,5 +1,6 @@
 package com.master.udd.lucene.service;
 
+import com.master.udd.dto.BasicSearchRequest;
 import com.master.udd.dto.SearchRequest;
 import com.master.udd.dto.SearchRequestField;
 import com.master.udd.dto.SearchResponse;
@@ -26,7 +27,9 @@ import org.springframework.stereotype.Service;
 import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @AllArgsConstructor
@@ -35,18 +38,51 @@ public class SearchService {
     private final LocationService locationService;
     private final ElasticsearchRestTemplate elasticsearchRestTemplate;
 
-    public List<SearchResponse> basicSearch(String query, Pageable pageable) {
+    public List<SearchResponse> basicSearch(BasicSearchRequest searchRequest, Pageable pageable) {
         HighlightBuilder highlightBuilder = new HighlightBuilder()
                 .highlighterType("plain")
-                .field("cvContent");
-        NativeSearchQuery searchQuery = new NativeSearchQueryBuilder()
-                .withQuery(multiMatchQuery(query)
-                        .field("applicantName")
-                        .field("applicantSurname")
-                        .field("cvContent")
-                        .type(MultiMatchQueryBuilder.Type.BEST_FIELDS))
-                .withHighlightBuilder(highlightBuilder)
-                .build();
+                .field("cvContent")
+                .preTags("<b>")
+                .postTags("</b>");
+        NativeSearchQuery searchQuery;
+        switch (searchRequest.getField()) {
+            case "applicantName":
+                searchQuery = new NativeSearchQueryBuilder()
+                        .withQuery(QueryBuilders.matchQuery("applicantName", searchRequest.getQuery()))
+                        .withPageable(pageable)
+                        .build();
+                break;
+            case "applicantSurname":
+                searchQuery = new NativeSearchQueryBuilder()
+                        .withQuery(QueryBuilders.matchQuery("applicantSurname", searchRequest.getQuery()))
+                        .withPageable(pageable)
+                        .build();
+                break;
+            case "applicantEducation":
+                searchQuery = new NativeSearchQueryBuilder()
+                        .withQuery(QueryBuilders.matchQuery("applicantEducation", searchRequest.getQuery()))
+                        .withPageable(pageable)
+                        .build();
+                break;
+            case "cvContent":
+                searchQuery = new NativeSearchQueryBuilder()
+                        .withQuery(QueryBuilders.matchQuery("cvContent", searchRequest.getQuery()))
+                        .withHighlightBuilder(highlightBuilder)
+                        .withPageable(pageable)
+                        .build();
+                break;
+            default:
+                searchQuery = new NativeSearchQueryBuilder()
+                        .withQuery(multiMatchQuery(searchRequest.getQuery())
+                                .field("applicantName")
+                                .field("applicantSurname")
+                                .field("cvContent")
+                                .type(MultiMatchQueryBuilder.Type.BEST_FIELDS))
+                        .withHighlightBuilder(highlightBuilder)
+                        .withPageable(pageable)
+                        .build();
+                break;
+        }
         SearchHits<CVIndex> searchHits =
                 elasticsearchRestTemplate.search(searchQuery, CVIndex.class, IndexCoordinates.of("cvs"));
 
@@ -95,7 +131,9 @@ public class SearchService {
         //default number of fragments of 5
         HighlightBuilder highlightBuilder = new HighlightBuilder()
                                                 .highlighterType("plain")
-                                                .field("cvContent");
+                                                .field("cvContent")
+                                                .preTags("<b>")
+                                                .postTags("</b>");
 
         // pretraga po geolokaciji
         GeoDistanceQueryBuilder geoDistanceBuilder = null;
@@ -148,8 +186,9 @@ public class SearchService {
             }
             SearchResponse searchResponse = new SearchResponse(
                     cvIndex.getApplicantName() + " " + cvIndex.getApplicantSurname(),
-                    cvIndex.getApplicantLocation().getLon(),
-                    cvIndex.getApplicantLocation().getLat(),
+                    cvIndex.getApplicantEmail(),
+                    cvIndex.getApplicantEducationName(),
+                    cvIndex.getApplicantAddress(),
                     highlight
             );
             found.add(searchResponse);

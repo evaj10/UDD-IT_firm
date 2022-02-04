@@ -9,12 +9,19 @@ import { ApplicantComponent } from './components/applicant/applicant.component';
 import { SearchComponent } from './components/search/search.component';
 import { SearchAdvancedComponent } from './components/search-advanced/search-advanced.component';
 import { LayoutComponent } from './components/layout/layout.component';
+import { StatsComponent } from './components/stats/stats.component';
+import { ResultListComponent } from './components/result-list/result-list.component';
+import { ResultComponent } from './components/result-list/result/result.component';
 
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @NgModule({
   declarations: [
@@ -23,6 +30,9 @@ import { MatSelectModule } from '@angular/material/select';
     SearchComponent,
     SearchAdvancedComponent,
     LayoutComponent,
+    StatsComponent,
+    ResultListComponent,
+    ResultComponent,
   ],
   imports: [
     BrowserModule,
@@ -34,6 +44,10 @@ import { MatSelectModule } from '@angular/material/select';
     MatInputModule,
     MatButtonModule,
     MatSelectModule,
+    MatButtonToggleModule,
+    MatTooltipModule,
+    MatPaginatorModule,
+    FontAwesomeModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

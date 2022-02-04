@@ -1,9 +1,51 @@
 <div class="container">
   <!-- Sidebar -->
-  <aside class="container_sidebar"></aside>
+  <aside class="container_sidebar">
+    <h2>Search</h2>
+    <h3>Awesome</h3>
+    <div class="search-btns">
+      <mat-button-toggle-group vertical value="application">
+        <mat-button-toggle
+          value="application"
+          matTooltip="Job Application"
+          matTooltipPosition="right"
+          (click)="applicant()"
+          ><fa-icon [icon]="faUser"></fa-icon
+        ></mat-button-toggle>
+        <mat-button-toggle
+          value="search-basic"
+          matTooltip="Basic Search"
+          matTooltipPosition="right"
+          (click)="basicSearch()"
+          ><fa-icon [icon]="faSearch"></fa-icon
+        ></mat-button-toggle>
+        <mat-button-toggle
+          value="search-advanced"
+          matTooltip="Advanced Search"
+          matTooltipPosition="right"
+          (click)="advancedSearch()"
+          ><fa-icon [icon]="faSearchPlus"></fa-icon
+        ></mat-button-toggle>
+        <mat-button-toggle
+          value="stats"
+          matTooltip="Statistics"
+          matTooltipPosition="right"
+          (click)="statistics()"
+          ><fa-icon [icon]="faStats"></fa-icon
+        ></mat-button-toggle>
+      </mat-button-toggle-group>
+    </div>
+  </aside>
 
   <!-- Main -->
   <main class="container_main">
-    <app-applicant></app-applicant>
+    <div [ngSwitch]="currentView">
+      <app-applicant *ngSwitchCase="'applicant'"></app-applicant>
+      <app-search *ngSwitchCase="'basicSearch'"></app-search>
+      <app-search-advanced
+        *ngSwitchCase="'advancedSearch'"
+      ></app-search-advanced>
+      <app-stats *ngSwitchCase="statistics"></app-stats>
+    </div>
   </main>
 </div>
