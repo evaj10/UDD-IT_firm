@@ -31,4 +31,9 @@ public class FileStorageService {
         return retVal;
     }
 
+    public byte[] readFile(String filePath) throws IOException {
+        Path pdfPath = Paths.get(filePath);
+        return Files.readAllBytes(pdfPath);
+    }
+
 }

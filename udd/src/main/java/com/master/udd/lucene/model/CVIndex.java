@@ -69,9 +69,13 @@ public class CVIndex {
     @Field(type = FieldType.Text, index = false, store = true)
     private String applicantEducationName;
 
+    @Field(type = FieldType.Keyword, index = false, store = true)
+    private Long cvId;
+
     public CVIndex(String applicantName, String applicantSurname,
                    Integer applicantEducation, Location location, String content,
-                   String applicantEmail, String applicantEducationName) {
+                   String applicantEmail, String applicantEducationName,
+                   Long cvId) {
         this.applicantName = applicantName;
         this.applicantSurname = applicantSurname;
         this.applicantEducation = applicantEducation;
@@ -80,6 +84,7 @@ public class CVIndex {
         this.applicantEmail = applicantEmail;
         this.applicantAddress = location.getAddress();
         this.applicantEducationName = applicantEducationName;
+        this.cvId = cvId;
     }
 
 }

@@ -5,6 +5,7 @@ import {
   faSearchPlus,
   faUserTie,
 } from '@fortawesome/free-solid-svg-icons';
+import { ApplicantService } from 'src/app/services/applicant.service';
 
 @Component({
   selector: 'app-layout',
@@ -19,7 +20,7 @@ export class LayoutComponent implements OnInit {
 
   currentView = 'applicant';
 
-  constructor() {}
+  constructor(private applicantService: ApplicantService) {}
 
   ngOnInit(): void {}
 
@@ -33,9 +34,5 @@ export class LayoutComponent implements OnInit {
 
   advancedSearch() {
     this.currentView = 'advancedSearch';
-  }
-
-  statistics() {
-    this.currentView = 'statistics';
   }
 }

@@ -1,6 +1,11 @@
 <div style="margin-bottom: 10px">
   <h2>
-    <a href="#">{{ result.fullName }}</a>
+    <a
+      [routerLink]=""
+      (click)="viewCV()"
+      [ngClass]="visited ? 'visited' : 'plain'"
+      >{{ result.fullName }}</a
+    >
   </h2>
   <h4>Email contact: {{ result.email }}</h4>
   <h4>Education level: {{ result.educationLevel }}</h4>

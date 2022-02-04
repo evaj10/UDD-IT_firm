@@ -20,4 +20,6 @@ public class SearchResponse {
     private String address;
 
     private String highlight;
+
+    private Long cvId;
 }

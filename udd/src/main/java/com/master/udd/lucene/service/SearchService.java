@@ -181,7 +181,8 @@ public class SearchService {
                     cvIndex.getApplicantEmail(),
                     cvIndex.getApplicantEducationName(),
                     cvIndex.getApplicantAddress(),
-                    highlight
+                    highlight,
+                    cvIndex.getCvId()
             );
             found.add(searchResponse);
         }

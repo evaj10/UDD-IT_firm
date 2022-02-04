@@ -6,6 +6,13 @@ h4 {
   margin: 0;
 }
 
-a {
+.visited {
+  color: purple;
+}
+.plain {
   color: #377a7c;
+}
+
+h2 a {
+  cursor: pointer;
 }

@@ -26,13 +26,6 @@
           (click)="advancedSearch()"
           ><fa-icon [icon]="faSearchPlus"></fa-icon
         ></mat-button-toggle>
-        <mat-button-toggle
-          value="stats"
-          matTooltip="Statistics"
-          matTooltipPosition="right"
-          (click)="statistics()"
-          ><fa-icon [icon]="faStats"></fa-icon
-        ></mat-button-toggle>
       </mat-button-toggle-group>
     </div>
   </aside>
@@ -45,7 +38,6 @@
       <app-search-advanced
         *ngSwitchCase="'advancedSearch'"
       ></app-search-advanced>
-      <app-stats *ngSwitchCase="statistics"></app-stats>
     </div>
   </main>
 </div>

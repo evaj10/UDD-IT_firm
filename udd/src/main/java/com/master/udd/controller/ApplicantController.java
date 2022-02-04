@@ -26,4 +26,10 @@ public class ApplicantController {
         Applicant applicant = applicantService.save(applicantDto);
         return new ResponseEntity<>(applicant.getId(), HttpStatus.OK);
     }
+
+    @GetMapping("/cv/{cv-id}")
+    public ResponseEntity<byte[]> getApplicantCv(@PathVariable("cv-id") Long cvId) throws EntityNotFoundException, IOException {
+        byte[] cvFileContent = applicantService.getApplicantCv(cvId);
+        return new ResponseEntity<>(cvFileContent, HttpStatus.OK);
+    }
 }

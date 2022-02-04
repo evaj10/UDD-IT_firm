@@ -18,6 +18,7 @@ public class ApplicantService {
     private final FileStorageService fileStorageService;
     private final LocationService locationService;
     private final EducationLevelService educationService;
+    private final CvService cvService;
     private final ApplicantRepository applicantRepository;
     private final Indexer indexer;
 
@@ -38,4 +39,8 @@ public class ApplicantService {
         return applicant;
     }
 
+    public byte[] getApplicantCv(Long cvId) throws EntityNotFoundException, IOException {
+        CV cv = cvService.findById(cvId);
+        return fileStorageService.readFile(cv.getFileLocation());
+    }
 }
