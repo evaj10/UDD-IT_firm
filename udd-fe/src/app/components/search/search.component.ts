@@ -5,6 +5,7 @@ import { BasicSearch } from 'src/app/model/basic-search.model';
 import { ResultPage } from 'src/app/model/result-page.model';
 import { Result } from 'src/app/model/result.model';
 import { SearchService } from 'src/app/services/search.service';
+import { StateService } from 'src/app/services/state.service';
 
 @Component({
   selector: 'app-search',
@@ -16,7 +17,10 @@ export class SearchComponent implements OnInit {
   searchForm: FormGroup;
   pageEvent: PageEvent = new PageEvent();
 
-  constructor(private searchService: SearchService) {
+  constructor(
+    private searchService: SearchService,
+    private stateService: StateService
+  ) {
     this.searchForm = new FormGroup({
       query: new FormControl('', [Validators.required]),
       field: new FormControl('', [Validators.required]),
@@ -25,7 +29,15 @@ export class SearchComponent implements OnInit {
     this.pageEvent.pageSize = 10;
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.results = this.stateService.searchPage.getValue();
+    this.searchForm.controls['query'].setValue(
+      this.stateService.basicSearch.getValue().query
+    );
+    this.searchForm.controls['field'].setValue(
+      this.stateService.basicSearch.getValue().field
+    );
+  }
 
   search() {
     if (this.searchForm.invalid) {
@@ -36,6 +48,8 @@ export class SearchComponent implements OnInit {
       this.searchForm.value.query,
       this.searchForm.value.field
     );
+    this.stateService.basicSearch.next(searchRequest);
+
     if (
       searchRequest.field === 'applicantEducation' &&
       isNaN(Number(searchRequest.query))
@@ -50,6 +64,7 @@ export class SearchComponent implements OnInit {
       )
       .subscribe((response) => {
         this.results = response;
+        this.stateService.searchPage.next(response);
       });
   }
 

@@ -7,6 +7,7 @@ import { GeolocationSearch } from 'src/app/model/geolocation-search.model';
 import { RangeSearch } from 'src/app/model/range-search.model';
 import { ResultPage } from 'src/app/model/result-page.model';
 import { SearchService } from 'src/app/services/search.service';
+import { StateService } from 'src/app/services/state.service';
 
 @Component({
   selector: 'app-search-advanced',
@@ -19,7 +20,10 @@ export class SearchAdvancedComponent implements OnInit {
   pageEvent: PageEvent = new PageEvent();
   expandePanel: boolean = false;
 
-  constructor(private searchService: SearchService) {
+  constructor(
+    private searchService: SearchService,
+    private stateService: StateService
+  ) {
     this.searchForm = new FormGroup({
       applicantName: new FormControl(''),
       applicantNamePhrase: new FormControl(''),
@@ -42,7 +46,10 @@ export class SearchAdvancedComponent implements OnInit {
     this.pageEvent.pageSize = 10;
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.results = this.stateService.advancedSearchPage.getValue();
+    this.setStateSearchRequest();
+  }
 
   search() {
     if (this.searchForm.invalid) {
@@ -50,6 +57,8 @@ export class SearchAdvancedComponent implements OnInit {
     }
 
     const searchRequest = this.constructSearchRequest();
+    this.stateService.advancedSearch.next(searchRequest);
+
     this.searchService
       .advancedSearch(
         searchRequest,
@@ -58,6 +67,7 @@ export class SearchAdvancedComponent implements OnInit {
       )
       .subscribe((response) => {
         this.results = response;
+        this.stateService.advancedSearchPage.next(response);
         this.expandePanel = false;
       });
   }
@@ -80,8 +90,8 @@ export class SearchAdvancedComponent implements OnInit {
         new AdvancedSearchField(
           'applicantName',
           this.searchForm.value.applicantName,
-          this.searchForm.value.applicantNamePhrase !== '',
-          this.searchForm.value.applicantNameMust === 'true'
+          this.searchForm.value.applicantNamePhrase === '' ? 'false' : 'true',
+          this.searchForm.value.applicantNameMust
         )
       );
     }
@@ -90,8 +100,10 @@ export class SearchAdvancedComponent implements OnInit {
         new AdvancedSearchField(
           'applicantSurname',
           this.searchForm.value.applicantSurname,
-          this.searchForm.value.applicantSurnamePhrase !== '',
-          this.searchForm.value.applicantSurnameMust === 'true'
+          this.searchForm.value.applicantSurnamePhrase === ''
+            ? 'false'
+            : 'true',
+          this.searchForm.value.applicantSurnameMust
         )
       );
     }
@@ -100,8 +112,10 @@ export class SearchAdvancedComponent implements OnInit {
         new AdvancedSearchField(
           'cvContent',
           this.searchForm.value.applicantCvContent,
-          this.searchForm.value.applicantCvContentPhrase !== '',
-          this.searchForm.value.applicantCvContentMust === 'true'
+          this.searchForm.value.applicantCvContentPhrase === ''
+            ? 'false'
+            : 'true',
+          this.searchForm.value.applicantCvContentMust
         )
       );
     }
@@ -133,5 +147,74 @@ export class SearchAdvancedComponent implements OnInit {
       geoLocation
     );
     return searchRequest;
+  }
+
+  setStateSearchRequest() {
+    const advancedSearch = this.stateService.advancedSearch.getValue();
+    // fields
+    this.setFieldsStateSearchRequest(advancedSearch);
+    // range
+    if (advancedSearch.rangeRequest) {
+      this.searchForm.controls['applicantEducationLowerBound'].setValue(
+        advancedSearch.rangeRequest?.lowerBound
+      );
+      this.searchForm.controls['applicantEducationUpperBound'].setValue(
+        advancedSearch.rangeRequest?.upperBound
+      );
+      this.searchForm.controls['applicantEducationMust'].setValue(
+        advancedSearch.rangeRequest?.mustContain
+      );
+    }
+    // location
+    if (advancedSearch.geoLocation) {
+      this.searchForm.controls['cityName'].setValue(
+        advancedSearch.geoLocation?.cityName
+      );
+      this.searchForm.controls['radius'].setValue(
+        advancedSearch.geoLocation?.radius
+      );
+      this.searchForm.controls['radiusUnit'].setValue(
+        advancedSearch.geoLocation?.radiusUnit
+      );
+    }
+  }
+
+  setFieldsStateSearchRequest(advancedSearch: AdvancedSearch) {
+    const fields = advancedSearch.fields;
+    if (fields) {
+      fields.forEach((field) => {
+        switch (field.field) {
+          case 'applicantName':
+            this.searchForm.controls['applicantName'].setValue(field.query);
+            this.searchForm.controls['applicantNamePhrase'].setValue(
+              field.phrase
+            );
+            this.searchForm.controls['applicantNameMust'].setValue(
+              field.mustContain
+            );
+            break;
+          case 'applicantSurname':
+            this.searchForm.controls['applicantSurname'].setValue(field.query);
+            this.searchForm.controls['applicantSurnamePhrase'].setValue(
+              field.phrase
+            );
+            this.searchForm.controls['applicantSurnameMust'].setValue(
+              field.mustContain
+            );
+            break;
+          case 'cvContent':
+            this.searchForm.controls['applicantCvContent'].setValue(
+              field.query
+            );
+            this.searchForm.controls['applicantCvContentPhrase'].setValue(
+              field.phrase
+            );
+            this.searchForm.controls['applicantCvContentMust'].setValue(
+              field.mustContain
+            );
+            break;
+        }
+      });
+    }
   }
 }

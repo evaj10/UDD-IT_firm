@@ -3,6 +3,6 @@ export class RangeSearch {
     public field: string,
     public lowerBound: number,
     public upperBound: number,
-    public mustContain: boolean
+    public mustContain: string
   ) {}
 }
