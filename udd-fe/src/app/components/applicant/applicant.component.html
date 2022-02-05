@@ -1,6 +1,8 @@
 <div class="container">
   <form
     [formGroup]="applicantForm"
+    #searchForm="ngForm"
+    (ngSubmit)="submitApplication(searchForm)"
     [style.fontSize.px]="14"
     class="form-center"
   >
@@ -43,7 +45,7 @@
     </mat-form-field>
     <mat-form-field appearance="standard" floatLabel="always">
       <mat-label>Education Level</mat-label>
-      <mat-select formControlName="education" placeholder="Highschool">
+      <mat-select formControlName="education" placeholder="Chose one">
         <mat-option value="1">Elementary</mat-option>
         <mat-option value="2">Highschool</mat-option>
         <mat-option value="3">Higher</mat-option>
@@ -67,7 +69,6 @@
       mat-flat-button
       color="primary"
       [disabled]="applicantForm.invalid || fileType !== 'pdf'"
-      (click)="submitApplication()"
     >
       SUBMIT
     </button>

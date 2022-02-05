@@ -1,5 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  FormGroupDirective,
+  Validators,
+} from '@angular/forms';
 import { ApplicantService } from 'src/app/services/applicant.service';
 
 @Component({
@@ -25,7 +30,7 @@ export class ApplicantComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  submitApplication() {
+  submitApplication(searchFormDirective: FormGroupDirective) {
     if (this.applicantForm.invalid || this.fileType !== 'pdf') {
       return;
     }
@@ -38,23 +43,22 @@ export class ApplicantComponent implements OnInit {
     formData.append('educationLevelId', this.applicantForm.value.education);
     formData.append('cv', this.file);
 
-    this.applicantService
-      .apply(formData)
-      .subscribe((response) => console.log(response));
-
-    // this.applicantService.apply(userLoginDto).subscribe(
-    //   (response) => {
-    //     this.toastr.success('Logged in successfully!');
-    //     this.authService.setLoggedInUser(response);
-    //     this.loginForm.reset();
-    //     this.router.navigate(['shopping']);
-    //     this.authService.role.next(this.authService.getLoggedInUserAuthority());
-    //   },
-    //   (error) => {
-    //     this.toastr.error('Incorrect email or password.');
-    //     this.loginForm.reset();
-    //   }
-    // );
+    this.applicantService.apply(formData).subscribe(
+      (response) => {
+        this.applicantForm.reset();
+        searchFormDirective.resetForm();
+        this.file = null;
+        this.fileName = '';
+        this.fileType = '';
+      },
+      (error) => {
+        this.applicantForm.reset();
+        searchFormDirective.resetForm();
+        this.file = null;
+        this.fileName = '';
+        this.fileType = '';
+      }
+    );
   }
 
   displayFileName(event: any) {
