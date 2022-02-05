@@ -37,6 +37,7 @@
       <input
         matInput
         formControlName="address"
+        #addressInput
         placeholder="70 Amsterdam Ave New York"
       />
       <mat-error *ngIf="applicantForm.get('address')?.invalid">{{

@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import {
   FormControl,
   FormGroup,
   FormGroupDirective,
   Validators,
 } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
 import { ApplicantService } from 'src/app/services/applicant.service';
 
 @Component({
@@ -14,11 +15,15 @@ import { ApplicantService } from 'src/app/services/applicant.service';
 })
 export class ApplicantComponent implements OnInit {
   applicantForm: FormGroup;
+  @ViewChild('addressInput') addressInput: ElementRef = {} as ElementRef;
   fileName: string = '';
   fileType: string = '';
   file: any = null;
 
-  constructor(private applicantService: ApplicantService) {
+  constructor(
+    private applicantService: ApplicantService,
+    private toastr: ToastrService
+  ) {
     this.applicantForm = new FormGroup({
       name: new FormControl('', [Validators.required]),
       surname: new FormControl('', [Validators.required]),
@@ -50,13 +55,11 @@ export class ApplicantComponent implements OnInit {
         this.file = null;
         this.fileName = '';
         this.fileType = '';
+        this.toastr.success('Succesfully applied for the job');
       },
       (error) => {
-        this.applicantForm.reset();
-        searchFormDirective.resetForm();
-        this.file = null;
-        this.fileName = '';
-        this.fileType = '';
+        this.toastr.error('Not a valid address');
+        this.addressInput.nativeElement.focus();
       }
     );
   }
