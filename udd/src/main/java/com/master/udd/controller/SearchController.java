@@ -24,13 +24,10 @@ public class SearchController {
 
     private SearchService searchService;
 
-    private final static Logger LOGGER = Logger.getLogger("SearchController.class");
-
     @PostMapping("/basic")
     public ResponseEntity<Page<SearchResponse>> basicSearch(
             Pageable pageable,
             @Valid @RequestBody BasicSearchRequest searchRequest) {
-        LOGGER.info("query=[" + searchRequest.getQuery() + "] ip=90.116.164.204");
         Page<SearchResponse> foundCvs = searchService.basicSearch(searchRequest, pageable);
         return new ResponseEntity<>(foundCvs, HttpStatus.OK);
     }

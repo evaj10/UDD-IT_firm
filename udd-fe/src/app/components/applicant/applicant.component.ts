@@ -48,20 +48,25 @@ export class ApplicantComponent implements OnInit {
     formData.append('educationLevelId', this.applicantForm.value.education);
     formData.append('cv', this.file);
 
-    this.applicantService.apply(formData).subscribe(
-      (response) => {
-        this.applicantForm.reset();
-        searchFormDirective.resetForm();
-        this.file = null;
-        this.fileName = '';
-        this.fileType = '';
-        this.toastr.success('Succesfully applied for the job');
-      },
-      (error) => {
-        this.toastr.error('Not a valid address');
-        this.addressInput.nativeElement.focus();
-      }
-    );
+    this.applicantService.getIpAddress().subscribe((res: any) => {
+      const ipAddress = res.ip;
+      formData.append('ipAddress', ipAddress);
+      this.applicantService.apply(formData).subscribe(
+        (response) => {
+          this.applicantForm.reset();
+          searchFormDirective.resetForm();
+          this.file = null;
+          this.fileName = '';
+          this.fileType = '';
+          this.toastr.success('Succesfully applied for the job');
+        },
+        (error) => {
+          const errorJson = JSON.parse(error.error);
+          this.toastr.error(errorJson.message);
+          this.addressInput.nativeElement.focus();
+        }
+      );
+    });
   }
 
   displayFileName(event: any) {

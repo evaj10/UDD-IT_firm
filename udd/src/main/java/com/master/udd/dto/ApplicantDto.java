@@ -34,4 +34,7 @@ public class ApplicantDto {
 
 //    @NotNull
 //    private MultipartFile letter;
+
+    @NotNull
+    private String ipAddress;
 }

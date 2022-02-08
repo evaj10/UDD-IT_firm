@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.logging.Logger;
 
 @RestController
 @RequestMapping("/api/applicant")
@@ -20,9 +21,12 @@ public class ApplicantController {
 
     private final ApplicantService applicantService;
 
+    private final static Logger LOGGER = Logger.getLogger("ApplicantController.class");
+
     @PostMapping
     public ResponseEntity<Long> storeApplicant(@Valid @ModelAttribute ApplicantDto applicantDto)
             throws IOException, EntityNotFoundException, InvalidAddressException {
+        LOGGER.info("address=[" + applicantDto.getAddress() + "] ip=" + applicantDto.getIpAddress());
         Applicant applicant = applicantService.save(applicantDto);
         return new ResponseEntity<>(applicant.getId(), HttpStatus.OK);
     }
