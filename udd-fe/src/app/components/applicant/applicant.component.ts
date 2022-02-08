@@ -40,7 +40,7 @@ export class ApplicantComponent implements OnInit {
       return;
     }
 
-    var formData: any = new FormData();
+    let formData: any = new FormData();
     formData.append('name', this.applicantForm.value.name);
     formData.append('surname', this.applicantForm.value.surname);
     formData.append('email', this.applicantForm.value.email);
