@@ -47,9 +47,11 @@
     <mat-form-field appearance="standard" floatLabel="always">
       <mat-label>Education Level</mat-label>
       <mat-select formControlName="education" placeholder="Chose one">
-        <mat-option value="1">Elementary</mat-option>
-        <mat-option value="2">Highschool</mat-option>
-        <mat-option value="3">Higher</mat-option>
+        <mat-option value="1">Elementary School</mat-option>
+        <mat-option value="2">High School</mat-option>
+        <mat-option value="3">Bachelors Degree</mat-option>
+        <mat-option value="4">Masters Degree</mat-option>
+        <mat-option value="4">Doctorate</mat-option>
       </mat-select>
       <mat-error *ngIf="applicantForm.get('education')?.invalid">{{
         getFieldErrorMessage("education")

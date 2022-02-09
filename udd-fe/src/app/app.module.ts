@@ -12,6 +12,8 @@ import { LayoutComponent } from './components/layout/layout.component';
 import { StatsComponent } from './components/stats/stats.component';
 import { ResultListComponent } from './components/result-list/result-list.component';
 import { ResultComponent } from './components/result-list/result/result.component';
+import { LoginComponent } from './components/login/login.component';
+import { AuthInterceptorService } from './interceptors/auth-interceptor.service';
 
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -23,10 +25,9 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatTableModule } from '@angular/material/table';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ToastrModule } from 'ngx-toastr';
-import { LoginComponent } from './components/login/login.component';
-import { AuthInterceptorService } from './interceptors/auth-interceptor.service';
 
 @NgModule({
   declarations: [
@@ -55,6 +56,7 @@ import { AuthInterceptorService } from './interceptors/auth-interceptor.service'
     MatPaginatorModule,
     MatExpansionModule,
     MatCheckboxModule,
+    MatTableModule,
     FontAwesomeModule,
     ToastrModule.forRoot(),
   ],

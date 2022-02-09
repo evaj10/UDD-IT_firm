@@ -18,7 +18,21 @@ h2 {
 }
 
 .content {
-  margin: 100px auto 50px 70px;
+  margin: 60px auto;
   width: 80%;
   display: block;
+}
+
+table {
+  width: 100%;
+}
+
+.mat-row:nth-child(even) {
+  background: rgba(92, 220, 224, 0.39);
+}
+.mat-header-row {
+  background: #377a7c;
+}
+th.mat-header-cell {
+  color: white;
 }

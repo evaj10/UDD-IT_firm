@@ -1,5 +1,5 @@
 <div class="container">
-  <h2>Statistics:</h2>
+  <h2>Applicant Form Access Statistics:</h2>
   <button mat-flat-button color="primary" class="search-btn" (click)="byCity()">
     By City
   </button>
@@ -8,36 +8,22 @@
   </button>
 </div>
 <div class="content">
-  <div [ngSwitch]="chosenStats">
-    <div *ngSwitchCase="'city'">
-      <table>
-        <thead>
-          <th>City</th>
-          <th>Count</th>
-        </thead>
-        <tbody>
-          <tr *ngFor="let stat of stats">
-            <td>{{ stat.label }}</td>
-            <td>{{ stat.value }}</td>
-          </tr>
-          <tr></tr>
-        </tbody>
-      </table>
-    </div>
-    <div *ngSwitchCase="'day'">
-      <table>
-        <thead>
-          <th>Part of Day</th>
-          <th>Count</th>
-        </thead>
-        <tbody>
-          <tr *ngFor="let stat of stats">
-            <td>{{ stat.label }}</td>
-            <td>{{ stat.value }}</td>
-          </tr>
-          <tr></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
+  <table
+    *ngIf="title !== ''"
+    mat-table
+    [dataSource]="stats"
+    class="mat-elevation-z8"
+  >
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+    <ng-container matColumnDef="label">
+      <th mat-header-cell *matHeaderCellDef>{{ title }}</th>
+      <td mat-cell *matCellDef="let stat">{{ stat.label }}</td>
+    </ng-container>
+    <ng-container matColumnDef="value">
+      <th mat-header-cell *matHeaderCellDef>Count</th>
+      <td mat-cell *matCellDef="let stat">{{ stat.value }}</td>
+    </ng-container>
+  </table>
 </div>

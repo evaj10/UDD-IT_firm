@@ -55,10 +55,10 @@ public class StatsService {
 
         RangeAggregationBuilder aggregation = AggregationBuilders.range("timeOfDay")
                 .field("hour")
-                .addRange("night", 0, 6)
-                .addRange("morning", 6, 12)
-                .addRange("afternoon", 12, 20)
-                .addRange("evening", 20, 24);
+                .addRange("Night (0-6)", 0, 6)
+                .addRange("Morning (6-12)", 6, 12)
+                .addRange("Afternoon (12-20)", 12, 20)
+                .addRange("Evening (20-24)", 20, 24);
         searchSourceBuilder.aggregation(aggregation);
 
         searchRequest.source(searchSourceBuilder);
