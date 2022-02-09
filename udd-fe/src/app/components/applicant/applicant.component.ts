@@ -5,6 +5,7 @@ import {
   FormGroupDirective,
   Validators,
 } from '@angular/forms';
+import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { ApplicantService } from 'src/app/services/applicant.service';
 
@@ -22,7 +23,8 @@ export class ApplicantComponent implements OnInit {
 
   constructor(
     private applicantService: ApplicantService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private router: Router
   ) {
     this.applicantForm = new FormGroup({
       name: new FormControl('', [Validators.required]),
@@ -33,7 +35,9 @@ export class ApplicantComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.applicantService.formAccess();
+  }
 
   submitApplication(searchFormDirective: FormGroupDirective) {
     if (this.applicantForm.invalid || this.fileType !== 'pdf') {
@@ -48,25 +52,22 @@ export class ApplicantComponent implements OnInit {
     formData.append('educationLevelId', this.applicantForm.value.education);
     formData.append('cv', this.file);
 
-    this.applicantService.getIpAddress().subscribe((res: any) => {
-      const ipAddress = res.ip;
-      formData.append('ipAddress', ipAddress);
-      this.applicantService.apply(formData).subscribe(
-        (response) => {
-          this.applicantForm.reset();
-          searchFormDirective.resetForm();
-          this.file = null;
-          this.fileName = '';
-          this.fileType = '';
-          this.toastr.success('Succesfully applied for the job');
-        },
-        (error) => {
-          const errorJson = JSON.parse(error.error);
-          this.toastr.error(errorJson.message);
-          this.addressInput.nativeElement.focus();
-        }
-      );
-    });
+    this.applicantService.apply(formData).subscribe(
+      (response) => {
+        this.applicantForm.reset();
+        searchFormDirective.resetForm();
+        this.file = null;
+        this.fileName = '';
+        this.fileType = '';
+        this.toastr.success('Succesfully applied for the job');
+        this.router.navigate(['/login']);
+      },
+      (error) => {
+        const errorJson = JSON.parse(error.error);
+        this.toastr.error(errorJson.message);
+        this.addressInput.nativeElement.focus();
+      }
+    );
   }
 
   displayFileName(event: any) {

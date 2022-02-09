@@ -2,13 +2,14 @@
   align-items: center;
   display: flex;
   justify-content: center;
+  margin-top: 30px;
 }
 
 .form-center {
   /* background: rgba(92, 220, 224, 0.39); */
   background: rgba(0, 0, 0, 0.04);
   width: 40%;
-  padding: 25px 40px 10px 40px;
+  padding: 25px 40px 25px 40px;
   margin-top: 25px;
   text-align: center;
   border-radius: 5px;
@@ -28,22 +29,6 @@ h2 {
   margin-bottom: 0px;
 }
 
-input[type="file"] {
-  display: none;
-}
-.custom-file-upload {
-  border: 1px solid #ccc;
-  background: white;
-  display: inline-block;
-  padding: 6px 12px;
-  cursor: pointer;
-  border-radius: 4px;
-  margin-bottom: 15px;
-}
-.custom-file-span {
-  margin-left: 15px;
-}
-
 .applicant-link {
-  margin-top: 25px;
+  margin-top: 35px;
 }

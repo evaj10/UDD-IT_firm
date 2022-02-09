@@ -23,9 +23,7 @@ import org.springframework.stereotype.Service;
 import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @AllArgsConstructor
@@ -86,15 +84,7 @@ public class SearchService {
     }
 
     public Page<SearchResponse> search(SearchRequest searchRequest, Pageable pageable) throws InvalidAddressException {
-        // za text polja ne koristiti termQuery nego matchQuery
-        // (term proverava da li je identican unos onome sto je zapisano)
-        // (ako je polje tekst, pretprocesira se i bude izmenje)
-        // (zato ne mogu da se nadju egzaktni unosi)
-        // DA LI ONDA STAVITI DA SU IME I PREZIME TEXT POLJA?
-        // (da bismo mogli da nadjemo i kada ne unesemo precizno)
-        // (da li ako je term radi ć i c varijanta? -> verovatno ne)
         // https://codecurated.com/blog/elasticsearch-text-vs-keyword/
-
         // ako je pretraga po nekom od polja
         BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();
         if (searchRequest.getFields() != null && !searchRequest.getFields().isEmpty()) {
@@ -128,8 +118,6 @@ public class SearchService {
             }
         }
         // hajlajtovanje (dinamicki sazetak) ima smisla da se radi samo za sadrzaj
-        // (nema mi bas smisla da se radi sazetak za ime koja je jedna rec...)
-
         // problem sa unified (defaultni highlighter) u kombinaciji sa phrase
         // https://github.com/elastic/elasticsearch/issues/29561
         // koristi se zbog toga plain

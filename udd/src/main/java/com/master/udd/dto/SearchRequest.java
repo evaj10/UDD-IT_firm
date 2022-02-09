@@ -25,10 +25,4 @@ public class SearchRequest {
     @Valid
     private GeoLocationRequest geoLocation;
 
-    // 4. KOMBO SVEGA SA AND I OR
-    // 5. PhrazeQuery
-    // 6. SerbianAnalyzer
-    // 7. Highlighter
-    // 8. Pretraga po geolokaciji
-
 }

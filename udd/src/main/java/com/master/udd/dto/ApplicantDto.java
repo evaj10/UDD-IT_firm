@@ -32,9 +32,4 @@ public class ApplicantDto {
     @NotNull
     private MultipartFile cv;
 
-//    @NotNull
-//    private MultipartFile letter;
-
-    @NotNull
-    private String ipAddress;
 }

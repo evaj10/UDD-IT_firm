@@ -18,6 +18,19 @@ export class ApplicantService {
     );
   }
 
+  formAccess() {
+    this.getIpAddress().subscribe((response: any) => {
+      this.http
+        .post<void>(
+          environment.apiEndpoint +
+            '/applicant/access?ipAddress=' +
+            response.ip,
+          {}
+        )
+        .subscribe();
+    });
+  }
+
   getIpAddress() {
     return this.http.get(
       'https://cors-anywhere.herokuapp.com/http://api.ipify.org/?format=json'

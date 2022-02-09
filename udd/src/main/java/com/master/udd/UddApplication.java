@@ -1,5 +1,8 @@
 package com.master.udd;
 
+import org.apache.http.HttpHost;
+import org.elasticsearch.client.RestClient;
+import org.elasticsearch.client.RestHighLevelClient;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -24,5 +27,12 @@ public class UddApplication {
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder(12);
+	}
+
+	@Bean
+	public RestHighLevelClient client() {
+		return new RestHighLevelClient(
+				RestClient.builder(
+						new HttpHost("localhost", 9200, "http")));
 	}
 }

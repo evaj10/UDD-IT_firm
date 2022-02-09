@@ -4,14 +4,14 @@
     <h2>Search</h2>
     <h3>Awesome</h3>
     <div class="search-btns">
-      <mat-button-toggle-group vertical value="application">
-        <mat-button-toggle
+      <mat-button-toggle-group vertical value="search-basic">
+        <!-- <mat-button-toggle
           value="application"
           matTooltip="Job Application"
           matTooltipPosition="right"
           (click)="applicant()"
           ><fa-icon [icon]="faUser"></fa-icon
-        ></mat-button-toggle>
+        ></mat-button-toggle> -->
         <mat-button-toggle
           value="search-basic"
           matTooltip="Basic Search"
@@ -26,6 +26,20 @@
           (click)="advancedSearch()"
           ><fa-icon [icon]="faSearchPlus"></fa-icon
         ></mat-button-toggle>
+        <mat-button-toggle
+          value="stats"
+          matTooltip="Statistics"
+          matTooltipPosition="right"
+          (click)="stats()"
+          ><fa-icon [icon]="faStats"></fa-icon
+        ></mat-button-toggle>
+        <mat-button-toggle
+          value="logout"
+          matTooltip="Logout"
+          matTooltipPosition="right"
+          (click)="logout()"
+          ><fa-icon [icon]="faLogout"></fa-icon
+        ></mat-button-toggle>
       </mat-button-toggle-group>
     </div>
   </aside>
@@ -33,11 +47,12 @@
   <!-- Main -->
   <main class="container_main">
     <div [ngSwitch]="currentView">
-      <app-applicant *ngSwitchCase="'applicant'"></app-applicant>
+      <!-- <app-applicant *ngSwitchCase="'applicant'"></app-applicant> -->
       <app-search *ngSwitchCase="'basicSearch'"></app-search>
       <app-search-advanced
         *ngSwitchCase="'advancedSearch'"
       ></app-search-advanced>
+      <app-stats *ngSwitchCase="'stats'"></app-stats>
     </div>
   </main>
 </div>

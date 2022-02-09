@@ -26,7 +26,6 @@ public class ApplicantController {
     @PostMapping
     public ResponseEntity<Long> storeApplicant(@Valid @ModelAttribute ApplicantDto applicantDto)
             throws IOException, EntityNotFoundException, InvalidAddressException {
-        LOGGER.info("address=[" + applicantDto.getAddress() + "] ip=" + applicantDto.getIpAddress());
         Applicant applicant = applicantService.save(applicantDto);
         return new ResponseEntity<>(applicant.getId(), HttpStatus.OK);
     }
@@ -35,5 +34,11 @@ public class ApplicantController {
     public ResponseEntity<byte[]> getApplicantCv(@PathVariable("cv-id") Long cvId) throws EntityNotFoundException, IOException {
         byte[] cvFileContent = applicantService.getApplicantCv(cvId);
         return new ResponseEntity<>(cvFileContent, HttpStatus.OK);
+    }
+
+    @PostMapping("/access")
+    public ResponseEntity<Void> logFormAccess(@RequestParam String ipAddress) {
+        LOGGER.info("ip=" + ipAddress);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

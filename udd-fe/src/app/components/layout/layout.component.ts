@@ -1,11 +1,14 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import {
+  faDoorOpen,
+  faExpandArrowsAlt,
   faFileAlt,
+  faRunning,
   faSearch,
   faSearchPlus,
   faUserTie,
 } from '@fortawesome/free-solid-svg-icons';
-import { ApplicantService } from 'src/app/services/applicant.service';
 
 @Component({
   selector: 'app-layout',
@@ -17,16 +20,17 @@ export class LayoutComponent implements OnInit {
   faSearchPlus = faSearchPlus;
   faUser = faUserTie;
   faStats = faFileAlt;
+  faLogout = faDoorOpen;
 
-  currentView = 'applicant';
+  currentView = 'basicSearch';
 
-  constructor(private applicantService: ApplicantService) {}
+  constructor(private router: Router) {}
 
   ngOnInit(): void {}
 
-  applicant() {
-    this.currentView = 'applicant';
-  }
+  // applicant() {
+  //   this.currentView = 'applicant';
+  // }
 
   basicSearch() {
     this.currentView = 'basicSearch';
@@ -34,5 +38,15 @@ export class LayoutComponent implements OnInit {
 
   advancedSearch() {
     this.currentView = 'advancedSearch';
+  }
+
+  stats() {
+    this.currentView = 'stats';
+  }
+
+  logout() {
+    sessionStorage.removeItem('jwtToken');
+    sessionStorage.removeItem('expiresIn');
+    this.router.navigate(['/login']);
   }
 }

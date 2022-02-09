@@ -1,1 +1,43 @@
-<p>stats works!</p>
+<div class="container">
+  <h2>Statistics:</h2>
+  <button mat-flat-button color="primary" class="search-btn" (click)="byCity()">
+    By City
+  </button>
+  <button mat-flat-button color="primary" class="search-btn" (click)="byDay()">
+    By Day Part
+  </button>
+</div>
+<div class="content">
+  <div [ngSwitch]="chosenStats">
+    <div *ngSwitchCase="'city'">
+      <table>
+        <thead>
+          <th>City</th>
+          <th>Count</th>
+        </thead>
+        <tbody>
+          <tr *ngFor="let stat of stats">
+            <td>{{ stat.label }}</td>
+            <td>{{ stat.value }}</td>
+          </tr>
+          <tr></tr>
+        </tbody>
+      </table>
+    </div>
+    <div *ngSwitchCase="'day'">
+      <table>
+        <thead>
+          <th>Part of Day</th>
+          <th>Count</th>
+        </thead>
+        <tbody>
+          <tr *ngFor="let stat of stats">
+            <td>{{ stat.label }}</td>
+            <td>{{ stat.value }}</td>
+          </tr>
+          <tr></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
